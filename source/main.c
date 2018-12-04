@@ -1,5 +1,6 @@
 #include <string.h>
 #include <stdio.h>
+#include "brick.h"
 #include "ev3.h"
 #include "ev3_port.h"
 #include "ev3_sensor.h"
