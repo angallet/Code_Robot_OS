@@ -110,6 +110,7 @@ int main( void )
     } else {
       printf( "LEGO_EV3_M_MOTOR 1 is NOT found\n" );
     }
+}
 
   //Run all sensors
   ev3_sensor_init();
