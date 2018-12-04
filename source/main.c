@@ -129,7 +129,6 @@ int main( void )
     }
 
     */
-  }
 
   //Run all sensors
   ev3_sensor_init();
