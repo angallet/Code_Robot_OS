@@ -57,3 +57,23 @@ void sg_motor (int port, int time, int speed)
       set_tacho_command_inx( sn, TACHO_RUN_TIMED );
     }
 }
+
+
+
+
+void init_motors(void)
+{
+    if (tacho_is_plugged(MOTOR_BOTH, TACHO_TYPE__NONE_))
+    {
+        tacho_reset(MOTOR_BOTH);
+        set_tacho_stop_action_inx(MOTOR_BOTH, TACHO_COAST);
+        print_console("Motors found\n");
+    }
+    else
+    {
+        print_error("Check the connection of the motor, ");
+        print_error("unable to establish connection");
+        // without motor nothing can be done
+        return 0;
+    }
+}
