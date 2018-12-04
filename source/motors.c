@@ -38,9 +38,22 @@ void quarter_turn(void)
 
 void move_forward (int distance)
 {
-  tacho_stop(MOTOR_BOTH);
-  while(tacho_is_running( MOTOR_BOTH ))
-    set_tacho_speed_sp( MOTOR_BOTH, 200 );
-  set_tacho_time_sp( MOTOR_BOTH, 5000 );
-  set_tacho_command_inx( MOTOR_BOTH, TACHO_RUN_TIMED );
+  uint8_t sn;
+  int port=65;
+  sg_motor(port, 5000, 200);
+  port=68;
+  sg_motor(port, 5000, 200);
+}
+
+void sg_motor (int port, int time, int speed)
+{
+    uint8_t sn;
+    if ( ev3_search_tacho_plugged_in(port,0, &sn, 0 )) {
+      printf( "LEGO_EV3_M_MOTOR 1 is found, run...\n" );
+      printf("  speed = %d\n", speed );
+      set_tacho_stop_action_inx( sn, TACHO_COAST );
+      set_tacho_speed_sp( sn, speed);
+      set_tacho_time_sp( sn, time );
+      set_tacho_command_inx( sn, TACHO_RUN_TIMED );
+    }
 }
