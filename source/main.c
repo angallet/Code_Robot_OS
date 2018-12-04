@@ -30,7 +30,9 @@ static bool _check_pressed( uint8_t sn )
   return ( get_sensor_value( 0, sn, &val ) && ( val != 0 ));
 }
 
+/*
 void run(void){
+    uint_8 sn;
     int port=65;
     for (port=65; port<69; port++){
       if ( ev3_search_tacho_plugged_in(port,0, &sn, 0 )) {
@@ -43,7 +45,7 @@ void run(void){
     }
 }
 
-
+*/
 
 
 
