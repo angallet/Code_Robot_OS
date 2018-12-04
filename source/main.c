@@ -108,7 +108,8 @@ int main( void )
       set_tacho_ramp_up_sp( sn, 2000 );
       set_tacho_ramp_down_sp( sn, 2000 );
       set_tacho_command_inx( sn, TACHO_RUN_FOREVER );
-
+      sleep(1000);
+      set_tacho_stop_action_inx( sn, TACHO_COAST );
     } else {
       printf( "LEGO_EV3_M_MOTOR 1 is NOT found\n" );
     }
@@ -174,9 +175,6 @@ int main( void )
     if ( _check_pressed( sn_touch )) break;
     Sleep( 200 );
     printf( "\r        " );
-    set_tacho_stop_action_inx( 65, TACHO_COAST );
-    set_tacho_stop_action_inx( 68, TACHO_COAST );
-
     fflush( stdout );
     if ( _check_pressed( sn_touch )) break;
     Sleep( 200 );
