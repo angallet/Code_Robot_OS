@@ -172,6 +172,9 @@ int main( void )
     if ( _check_pressed( sn_touch )) break;
     Sleep( 200 );
     printf( "\r        " );
+    set_tacho_stop_action_inx( 65, TACHO_COAST );
+    set_tacho_stop_action_inx( 68, TACHO_COAST );
+
     fflush( stdout );
     if ( _check_pressed( sn_touch )) break;
     Sleep( 200 );
