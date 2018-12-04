@@ -11,9 +11,9 @@
 #			*.c
 
 CC         =arm-linux-gnueabi-gcc
-CFLAGS     =-O2 -std=gnu99 -W -Wall -Wno-comment # -g
+CFLAGS     =-O2 -std=gnu99 -W -Wall -Wno-comment -g
 INCLUDES   =-I./ev3dev-c/source/ev3 #-I./include/
-LDFLAGS    =-lm -lev3dev-c -L.libraries -lrt -lpthread -lbluetooth
+LDFLAGS    =-lm -lev3dev-c -L./libraries -lrt -lpthread #-lbluetooth
 BUILD_DIR  = ./build
 SOURCE_DIR = ./source
 
