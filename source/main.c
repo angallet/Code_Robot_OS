@@ -30,12 +30,17 @@ static bool _check_pressed( uint8_t sn )
   return ( get_sensor_value( 0, sn, &val ) && ( val != 0 ));
 }
 
-void run(uint8_t sn){
-    int max_speed;
-    set_tacho_stop_action_inx( sn, TACHO_COAST );
-    get_tacho_max_speed( sn, &max_speed );
-    set_tacho_speed_sp( sn, max_speed * 2 / 3 );
-    set_tacho_command_inx( sn, TACHO_RUN_TO_REL_POS );
+void run(void){
+    int port=65;
+    for (port=65; port<69; port++){
+      if ( ev3_search_tacho_plugged_in(port,0, &sn, 0 )) {
+        int max_speed;
+        set_tacho_stop_action_inx( sn, TACHO_COAST );
+        get_tacho_max_speed( sn, &max_speed );
+        set_tacho_speed_sp( sn, max_speed * 2 / 3 );
+        set_tacho_command_inx( sn, TACHO_RUN_FOREVER );
+        }
+    }
 }
 
 
@@ -85,12 +90,7 @@ int main( void )
     }
   }
   //Run motors in order from port A to D
-  int port=65;
-  for (port=65; port<69; port++){
-    if ( ev3_search_tacho_plugged_in(port,0, &sn, 0 )) {
-        run(sn);
-    }
-    }
+  run();
 
 
   /*
