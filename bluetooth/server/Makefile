@@ -6,6 +6,10 @@ SRC_FILES 	= $(wildcard *.c)
 OBJ_FILES	= $(SRC_FILES:%.c=%.o)
 EXEC		= server
 
+
+CFLAGS := $(SDL_CFLAGS) -O3
+LDFLAGS := $(SDL_LDFLAGS) -lSDL_mixer
+
 all: $(EXEC)
 
 .c.o:
@@ -21,3 +25,4 @@ clean:
 
 ultraclean: clean
 	rm -f $(EXEC)
+
