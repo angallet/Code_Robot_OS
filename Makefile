@@ -39,6 +39,8 @@ $(BUILD_DIR)/%.o: $(SOURCE_DIR)/%.c
 docker:
 	docker run --rm -it -h ev3 -v ~/OS_Rover_APA/:/src -w /src ev3cc /bin/bash
 
+install-shared:
+	cd ev3dev-c/source/ev3/&&make&&sudo make install&&make shared&&sudo make shared-install
 
 clean:
 	rm -rf *.o
