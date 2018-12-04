@@ -16,6 +16,7 @@ INCLUDES   =-I./ev3dev-c/source/ev3 -I./include/
 LDFLAGS    =-lm -lev3dev-c -L./libraries -lrt -lpthread #-lbluetooth
 BUILD_DIR  = ./build
 SOURCE_DIR = ./source
+IP_ADDRESS = 192.168.137.3
 
 #here all the file we have to use to compile the program
 OBJS = \
@@ -42,6 +43,9 @@ docker:
 
 install-shared:
 	cd ev3dev-c/source/ev3/&&make&&sudo make install&&make shared&&sudo make shared-install
+
+send:
+	scp main robot@$(IP_ADDRESS):
 
 clean:
 	rm -rf *.o
