@@ -12,7 +12,7 @@
 
 CC         =arm-linux-gnueabi-gcc
 CFLAGS     =-O2 -std=gnu99 -W -Wall -Wno-comment -g
-INCLUDES   =-I./ev3dev-c/source/ev3 #-I./include/
+INCLUDES   =-I./ev3dev-c/source/ev3 -I./include/
 LDFLAGS    =-lm -lev3dev-c -L./libraries -lrt -lpthread #-lbluetooth
 BUILD_DIR  = ./build
 SOURCE_DIR = ./source
@@ -20,6 +20,7 @@ SOURCE_DIR = ./source
 #here all the file we have to use to compile the program
 OBJS = \
 	$(BUILD_DIR)/main.o \
+	$(BUILD_DIR)/motors.o \
 
 all: main
 

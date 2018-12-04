@@ -5,17 +5,17 @@
 #include "ev3_port.h"
 #include "ev3_tacho.h"
 #include "ev3_sensor.h"
-#include "motors.c"
+#include "motors.h"
+
 #define Sleep( msec ) usleep(( msec ) * 1000 )
 
 static bool _check_pressed( uint8_t sn );
-
 
 int main( void ){
     if ( ev3_init() == -1 ) return ( 1 );
     while ( ev3_tacho_init() < 1 ) Sleep( 1000 );
     printf( "*** ( EV3 ) Hello! ***\n" );
-    run();
+    move_forward(10);
 
 }
 
