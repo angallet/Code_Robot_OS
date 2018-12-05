@@ -67,12 +67,12 @@ void init_motors(void)
     {
         tacho_reset(MOTOR_BOTH);
         set_tacho_stop_action_inx(MOTOR_BOTH, TACHO_COAST);
-        print_console("Motors found\n");
+        printf("Motors found\n");
     }
     else
     {
-        print_error("Check the connection of the motor, ");
-        print_error("unable to establish connection");
+        printf("Check the connection of the motor, ");
+        printf("unable to establish connection");
         // without motor nothing can be done
         return 0;
     }
