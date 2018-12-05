@@ -19,7 +19,7 @@
 #define MOTOR_LEFT     OUTD
 #define MOTOR_RIGHT    OUTA
 #define MOTOR_BOTH     ( MOTOR_LEFT | MOTOR_RIGHT )
-
+#define M_PI 3.14159265358979323846
 //////////////////////////////////////////////////
 #endif
 
@@ -40,9 +40,10 @@ void move_forward (int distance)
 {
   uint8_t sn;
   int port=65;
-  sg_motor(port, 5000, 200);
+  int time=60/(M_PI*5.6*300);
+  sg_motor(port, time, 300);
   port=68;
-  sg_motor(port, 5000, 200);
+  sg_motor(port, time, 300);
 }
 
 void sg_motor (int port, int time, int speed)
@@ -73,7 +74,15 @@ void init_motors(void)
     {
         printf("Check the connection of the motor, ");
         printf("unable to establish connection");
-        // without motor nothing can be done
-        return 0;
     }
+}
+
+
+void turn (void)
+{
+  uint8_t sn;
+  int port=65;
+  sg_motor(port, 35, 300);
+  port=68;
+  sg_motor(port, 35, -300);
 }
