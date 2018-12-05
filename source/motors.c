@@ -40,7 +40,7 @@ void move_forward (int distance)
 {
   uint8_t sn;
   int port=65;
-  int time=60/(M_PI*5.6*300);
+  int time=5000;//60/(M_PI*5.6*300);
   sg_motor(port, time, 300);
   port=68;
   sg_motor(port, time, 300);
@@ -78,11 +78,11 @@ void init_motors(void)
 }
 
 
-void turn (void)
+void quarter_turn (void)
 {
   uint8_t sn;
   int port=65;
-  sg_motor(port, 35, 300);
+  sg_motor(port, 540, 300);
   port=68;
-  sg_motor(port, 35, -300);
+  sg_motor(port, 540, -300);
 }
