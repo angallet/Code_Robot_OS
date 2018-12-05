@@ -16,8 +16,7 @@ int main( void ){
     if ( ev3_init() == -1 ) return ( 1 );
     while ( ev3_tacho_init() < 1 ) Sleep( 1000 );
     printf( "*** ( EV3 ) Hello! ***\n" );
-    quarter_turn();
-    move_forward(50);
+    throw();
     while(1){
         if ( ev3_search_sensor( LEGO_EV3_TOUCH, &sn_touch, 0 )) {
           printf( "TOUCH sensor is found, press BUTTON for EXIT...\n" );
@@ -27,6 +26,7 @@ int main( void ){
         printf( "\r        " );
         fflush( stdout );
     }
+    move_forward(50);
     ev3_uninit();
     printf( "*** ( EV3 ) Bye! ***\n" );
 

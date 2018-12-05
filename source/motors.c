@@ -86,3 +86,18 @@ void quarter_turn (void)
   port=68;
   sg_motor(port, 540, -300);
 }
+
+void throw (void)
+{
+  uint8_t sn;
+  int port=66;
+  if ( ev3_search_tacho_plugged_in(port,0, &sn, 0 )) {
+    set_tacho_position_sp(sn, 400);
+    set_tacho_speed_sp( sn, 1000);
+    set_tacho_command_inx(sn, TACHO_RUN_TO_REL_POS);
+    Sleep(500);
+    set_tacho_position_sp(sn, -400);
+    set_tacho_command_inx(sn, TACHO_RUN_TO_REL_POS);
+    set_tacho_stop_action_inx( sn, TACHO_COAST );
+  }
+}
