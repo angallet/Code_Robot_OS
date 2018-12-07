@@ -101,3 +101,26 @@ void throw (void)
     set_tacho_stop_action_inx( sn, TACHO_COAST );
   }
 }
+
+void get_ball(void)
+{
+  uint8_t sn;
+  uint8_t sn_throw;
+  int port=67;
+  int port_throw=66;
+  if ( ev3_search_tacho_plugged_in(port,0, &sn, 0 ) && ev3_search_tacho_plugged_in(port_throw,0, &sn, 0 ))
+  {
+      set_tacho_position_sp(sn, -100);
+      set_tacho_speed_sp( sn, 1049);
+      set_tacho_command_inx(sn, TACHO_RUN_TO_REL_POS);
+      Sleep(3000);
+      set_tacho_speed_sp( sn, 0);
+      set_tacho_time_sp( sn, 5000 );
+      set_tacho_command_inx(sn, TACHO_RUN_TIMED);
+      set_tacho_position_sp(sn_throw, 80);
+      set_tacho_command_inx(sn, TACHO_RUN_TO_REL_POS);
+      Sleep(3000);
+      throw();
+      Sleep(5000);
+  }
+}
