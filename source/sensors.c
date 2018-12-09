@@ -2,6 +2,8 @@
 #include "brick.h"
 #include "main.h"
 #include "colors.h"
+#include "distance.h"
+#include "sensors.h"
 
 int init_sensors(void)
 {
