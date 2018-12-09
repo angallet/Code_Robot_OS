@@ -5,7 +5,7 @@
 
 int init_distance(void)
 {
-  if (ev3_search_sensor(LEGO_EV3_US, &sn_coloe,0))
+  if (ev3_search_sensor(LEGO_EV3_US, &sn_color,0))
   {
     printf("COLOR sensor found, reading COLOR...\n");
     return(1);

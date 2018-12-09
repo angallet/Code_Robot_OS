@@ -15,7 +15,7 @@ int init_distance(void)
   return ( 0 );
 }
 
-void distance_update(void)
+int distance_update(void)
 {
-  distance_value = get_sensor_value(sn_sonar, &value);
+  if(!get_sensor_value(sn_sonar, &distance_value) return 0;
 }

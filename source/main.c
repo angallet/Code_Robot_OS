@@ -8,20 +8,24 @@
 #include "motors.h"
 #include "distance.h"
 #include "colors.h"
+#include "sensors.h"
 
 #define Sleep( msec ) usleep(( msec ) * 1000 )
 
 static bool _check_pressed( uint8_t sn );
 
 int color_val = 0, distance_value;
-
+int powered;
 int main( void )
 {
-  int val;
-  uint8_t sn_touch;
-  float value;
-  uint8_t sn;
+    int val;
+    uint8_t sn_touch;
+    float value;
+    uint8_t sn;
+    pthread_t head_thread;
 
+    init();
+    pthread_create(&head_thread, NULL, sensors_main, NULL);
     if ( ev3_init() == -1 ) return ( 1 );
     while ( ev3_tacho_init() < 1 ) Sleep( 1000 );
     printf( "*** ( EV3 ) Hello! ***\n" );
@@ -33,6 +37,8 @@ int main( void )
     //quarter_turn();
     Sleep( 5000 );
     while(1){
+        printf("%d \n", distance_value);
+
         //move_forward(50);
         if ( ev3_search_sensor( LEGO_EV3_TOUCH, &sn_touch, 0 )) {
           printf( "TOUCH sensor is found, press BUTTON for EXIT...\n" );
@@ -58,4 +64,10 @@ static bool _check_pressed( uint8_t sn )
         return ( ev3_read_keys(( uint8_t *) &val ) && ( val & EV3_KEY_UP ));
     }
     return ( get_sensor_value( 0, sn, &val ) && ( val != 0 ));
+}
+
+int init(void)
+{
+  powered=1;
+  return (init_sensors());
 }
