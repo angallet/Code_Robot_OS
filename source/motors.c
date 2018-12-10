@@ -109,9 +109,11 @@ void disable_catapult(void)
     if ( ev3_search_tacho_plugged_in(port,0, &sn, 0 )) {
         printf("disable_catapult\n");
 
-      set_tacho_position_sp(sn, 20);
-      set_tacho_speed_sp( sn, 1049);
+      set_tacho_position_sp(sn, 140);
+      set_tacho_speed_sp( sn, 500);
       set_tacho_command_inx(sn, TACHO_RUN_TO_REL_POS);
+      set_tacho_stop_action_inx( sn, TACHO_COAST );
+
       Sleep(500);
     }
 }
@@ -123,9 +125,11 @@ void enable_catapult(void)
     if ( ev3_search_tacho_plugged_in(port,0, &sn, 0 )) {
         printf("enable_catapult\n" );
 
-      set_tacho_position_sp(sn, -20);
-      set_tacho_speed_sp( sn, 1049);
+      set_tacho_position_sp(sn, -140);
+      set_tacho_speed_sp( sn, 500);
       set_tacho_command_inx(sn, TACHO_RUN_TO_REL_POS);
+      set_tacho_stop_action_inx( sn, TACHO_COAST );
+
       Sleep(500);
     }
 }
@@ -135,7 +139,7 @@ void get_ball(void)
     int motor_lift = 66;
     printf("get_ball\n" );
 
-    sg_motor(motor_lift,800,-500);
+    sg_motor(motor_lift,850,-300);
     Sleep(1000);
     /*
   uint8_t sn;
