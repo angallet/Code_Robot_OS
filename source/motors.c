@@ -20,6 +20,7 @@
 #define MOTOR_RIGHT    OUTA
 #define MOTOR_BOTH     ( MOTOR_LEFT | MOTOR_RIGHT )
 #define M_PI 3.14159265358979323846
+#define SPEED 300
 //////////////////////////////////////////////////
 #endif
 
@@ -36,14 +37,41 @@ void quarter_turn(void)
 }
 */
 
+//distance in centimeter
 void move_forward (int distance)
 {
   uint8_t sn;
   int port=65;
-  int time=5000;//60/(M_PI*5.6*300);
-  sg_motor(port, time, 300);
+  int deg=360;
+  deg = (int)(distance/(M_PI*5.6))*360
+  print("%d\n",deg);
+  sg_motor_deg(port, deg, SPEED);
   port=68;
-  sg_motor(port, time, 300);
+  sg_motor_deg(port, deg, SPEED);
+}
+
+
+//width of the robot (measure at the center of the wheel ) 12cm
+void turn (int degree)
+{
+    uint8_t sn;
+    int port =65;
+    int deg = degree;
+    print("%d\n",deg);
+    sg_motor_deg(port, deg, SPEED);
+    port=68;
+    sg_motor_deg(port, deg, SPEED);
+}
+
+void sg_motor_deg (int port, int deg, int speed)
+{
+    uint8_t sn;
+    if ( ev3_search_tacho_plugged_in(port,0, &sn, 0 )) {
+      set_tacho_stop_action_inx( sn, TACHO_COAST );
+      set_tacho_position_sp(sn, deg);
+      set_tacho_speed_sp( sn, speed);
+      set_tacho_command_inx(sn, TACHO_RUN_TO_REL_POS);
+    }
 }
 
 void sg_motor (int port, int time, int speed)
