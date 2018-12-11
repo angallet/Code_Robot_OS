@@ -75,7 +75,7 @@ int main( void )
             //Sleep(1000);
             //enable_catapult();
             get_ball();
-            //throw();
+            throw();
         }
       }
 
