@@ -8,8 +8,8 @@
 #include <bluetooth/bluetooth.h>
 #include <bluetooth/rfcomm.h>
 
-#define SERV_ADDR   "dc:53:60:ad:61:90"     /* Whatever the address of the server is */
-#define TEAM_ID     1                       /* Your team ID */
+#define SERV_ADDR   "A0:E6:F8:DC:88:B9"     /* Whatever the address of the server is */
+#define TEAM_ID     2                       /* Your team ID */
 
 #define MSG_ACK     0
 #define MSG_START    1
@@ -38,6 +38,16 @@ int read_from_server (int sock, char *buffer, size_t maxSize) {
 
 void bluetooth_send_ack(void)
 {
+          char send_message[9];
+          ((uint16_t *) send_message) = msg_id++;
+          send_message[MSG_ID_LSB] = *((char *) &(msg_id));
+          send_message[MSG_ID_MSB] = *(((char *) &(msg_id))+1);
+          send_message[MSG_SRC] = TEAM_ID;
+          send_message[MSG_DST] = SERV_ADDR;
+          send_message[MSG_TYPE] = MSG_ACK;
+
+
+  write(s, send_message, 9);
 
 }
 
@@ -76,7 +86,49 @@ uint16_t ack_msg_id = 0;                        // Last acknowledged message (sh
  * Called on every connexion attempt
  * @return  1 if connected, 0 otherwise
  */
+
 int init_bluetooth( void )
+{
+        struct sockaddr_rc addr = { 0 };
+        int status;
+        //struct timeval timeout;
+        //timeout.tv_sec = READ_TIMEOUT_SEC;
+        //timeout.tv_usec = 0;
+
+        // allocate a socket
+        s = socket(AF_BLUETOOTH, SOCK_STREAM, BTPROTO_RFCOMM);
+        //setsockopt(s, SOL_SOCKET, SO_RCVTIMEO, (const char*)&timeout,sizeof(struct timeval));    // Set a timeout
+
+        // set the connection parameters (who to connect to)
+        addr.rc_family = AF_BLUETOOTH;
+        addr.rc_channel = (uint8_t) 1;
+        str2ba(SERV_ADDR, &addr.rc_bdaddr);
+
+        // connect to server
+        status = connect(s, (struct sockaddr *)&addr, sizeof(addr));
+
+        // if not connected
+        if( status != 0 ) {
+                print_error("Failed to connect to server...");
+                bluetooth_state = DISCONNECTED;
+                return ( 1 ); // TODO change to 0 when server is available
+        }
+        bluetooth_state = CONNECTED;
+        return ( 1 );
+}
+
+        status = connect(s, (struct sockaddr *)&addr, sizeof(addr));
+
+        // if not connected
+        if( status != 0 ) {
+                print_error("Failed to connect to server...");
+                bluetooth_state = DISCONNECTED;
+                return ( 1 ); // TODO change to 0 when server is available
+        }
+        bluetooth_state = CONNECTED;
+        return ( 1 );
+}
+
 {
         struct sockaddr_rc addr = { 0 };
         int status;
@@ -161,4 +213,9 @@ void *bluetooth_main(void *arg) {
         close(s);
         bluetooth_state = DISCONNECTED;
         pthread_exit(NULL);
+}
+void bluetooth_close()
+{
+    bluetooth_state = DISCONNECTED;
+    shutdown(s, SHUT_RDWR);
 }
