@@ -159,3 +159,14 @@ void get_ball(void)
   }
   */
 }
+
+void get_ball_2(void){
+    int motor_lift = 66;
+    uint8_t sn;
+    if ( ev3_search_tacho_plugged_in(motor_lift,0, &sn, 0 )) {
+      set_tacho_position_sp(sn, 360);
+      set_tacho_speed_sp( sn, 500);
+      set_tacho_command_inx(sn, TACHO_RUN_TO_REL_POS);
+      Sleep(500);
+    }
+}
