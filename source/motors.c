@@ -42,7 +42,6 @@ void move_forward (int distance)
 {
   uint8_t sn;
   int port=65;
-
   int deg=360;
   deg = (int)(distance/(M_PI*5.6))*360
   print("%d\n",deg);
