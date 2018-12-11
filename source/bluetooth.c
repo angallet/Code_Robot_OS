@@ -38,7 +38,7 @@ int read_from_server (int sock, char *buffer, size_t maxSize) {
 
 void bluetooth_send_ack(void)
 {
-          char send_message[9];
+          char send_message[8];
           ((uint16_t *) send_message) = msg_id++;
           send_message[MSG_ID_LSB] = *((char *) &(msg_id));
           send_message[MSG_ID_MSB] = *(((char *) &(msg_id))+1);
