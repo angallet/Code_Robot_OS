@@ -57,7 +57,7 @@ void turn (int degree)
 {
     uint8_t sn;
     int port =65;
-    int deg = (int)((((M_PI*12)/360)*degree)/(M_PI*5.6))*360;
+    int deg = (int)(12*degree)/(5.6));
     printf("The robot will rotate wheel %d degree\n",deg);
     sg_motor_deg(port, deg, SPEED);
     port=68;
