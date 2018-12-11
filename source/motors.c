@@ -40,8 +40,9 @@ void move_forward (int distance)
 {
   uint8_t sn;
   int port=65;
-  int time=5000;//60/(M_PI*5.6*300);
+  int time=3000;//60/(M_PI*5.6*300);
   sg_motor(port, time, 300);
+  Sleep(50);
   port=68;
   sg_motor(port, time, 300);
 }
@@ -173,4 +174,22 @@ void get_ball_2(void){
       set_tacho_command_inx(sn, TACHO_RUN_TO_REL_POS);
       Sleep(500);
     }
+}
+
+void search_ball(float *value)
+{
+
+    int prev_distance=10000;
+    int threshold = 300;
+    uint8_t sn_sonar;
+    if (ev3_search_sensor(LEGO_EV3_US, &sn_sonar,0)){
+    while(abs(get_sensor_value(sn_sonar, &value )-prev_distance)<threshold) //threshold à déterminer expérimentalement
+    {
+      quarter_turn();
+      Sleep(1000);
+      prev_distance = get_sensor_value(sn_sonar, &value);
+    }
+    move_forward(prev_distance);
+    get_ball();
+  }
 }
