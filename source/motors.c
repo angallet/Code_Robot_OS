@@ -104,6 +104,18 @@ void throw (void)
 
 void get_ball(void)
 {
+    uint8_t sn;
+    int motor_catapult = 67;
+    int motor_lift = 66;
+    if ( ev3_search_tacho_plugged_in(motor_lift,0, &sn, 0 )) {
+      set_tacho_position_sp(sn, -150);
+      set_tacho_speed_sp( sn, 1049);
+      set_tacho_command_inx(sn, TACHO_RUN_TO_ABS_POS);
+  }
+  Sleep(1000);
+    sg_motor(motor_lift,1000,300);
+
+    /*
   uint8_t sn;
   uint8_t sn_throw;
   int port=67;
@@ -123,4 +135,5 @@ void get_ball(void)
       throw();
       Sleep(5000);
   }
+  */
 }
