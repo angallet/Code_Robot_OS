@@ -57,10 +57,12 @@ void bluetooth_received_stop(void)
 
 void bluetooth_received_kick(void)
 {
-
+  char send_message[6];
+  send_message;
 }
 
 void bluetooth_send_score(int score)
 {
+
 
 }
