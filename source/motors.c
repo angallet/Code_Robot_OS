@@ -42,7 +42,7 @@ void move_forward (int distance)
   uint8_t sn;
   int port=65;
   int time=10000;
-  printf("%d\n",deg);
+  printf("the robot will run during : %d\n",time);
   sg_motor(port, time, SPEED);
   port=68;
   sg_motor(port, time, SPEED);
@@ -54,7 +54,7 @@ void turn (int degree)
 {
     uint8_t sn;
     int port =65;
-    int deg = (((M_PI*12)%360)*degree)/(M_PI*5.6);
+    int deg = (int)(((M_PI*12)%360)*degree)/(M_PI*5.6);
     printf("%d\n",deg);
     sg_motor_deg(port, deg, SPEED);
     port=68;
