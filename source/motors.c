@@ -20,7 +20,7 @@
 #define MOTOR_RIGHT    OUTA
 #define MOTOR_BOTH     ( MOTOR_LEFT | MOTOR_RIGHT )
 #define M_PI 3.14159265358979323846
-#define SPEED 300
+#define SPEED 250
 //////////////////////////////////////////////////
 #endif
 
@@ -41,12 +41,11 @@ void move_forward (int distance)
 {
   uint8_t sn;
   int port=65;
-  int deg=360;
-  deg = (int)(distance/(M_PI*5.6))*2*360;
+  int time=10000;
   printf("%d\n",deg);
-  sg_motor_deg(port, deg, SPEED);
+  sg_motor(port, time, SPEED);
   port=68;
-  sg_motor_deg(port, deg, SPEED);
+  sg_motor(port, time, SPEED);
 }
 
 
