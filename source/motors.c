@@ -43,8 +43,8 @@ void move_forward (int distance)
   uint8_t sn;
   int port=65;
   int deg=360;
-  deg = (int)(distance/(M_PI*5.6))*360
-  print("%d\n",deg);
+  deg = (int)(distance/(M_PI*5.6))*2*360;
+  printf("%d\n",deg);
   sg_motor_deg(port, deg, SPEED);
   port=68;
   sg_motor_deg(port, deg, SPEED);
@@ -56,11 +56,11 @@ void turn (int degree)
 {
     uint8_t sn;
     int port =65;
-    int deg = degree;
-    print("%d\n",deg);
+    int deg = (((M_PI*12)%360)*degree)/(M_PI*5.6);
+    printf("%d\n",deg);
     sg_motor_deg(port, deg, SPEED);
     port=68;
-    sg_motor_deg(port, deg, SPEED);
+    sg_motor_deg(port, deg, -SPEED);
 }
 
 void sg_motor_deg (int port, int deg, int speed)
