@@ -102,14 +102,35 @@ void throw (void)
   }
 }
 
-void get_ball(void)
+void disable_catapult(void)
 {
     uint8_t sn;
-    int motor_catapult = 67;
-    int motor_lift = 66;
-  Sleep(1000);
-    sg_motor(motor_lift,800,-300);
+    int port=66;
+    if ( ev3_search_tacho_plugged_in(port,0, &sn, 0 )) {
+      set_tacho_position_sp(sn, 20);
+      set_tacho_speed_sp( sn, 1049);
+      set_tacho_command_inx(sn, TACHO_RUN_TO_REL_POS);
+      Sleep(500);
+    }
+}
 
+void enable_catapult(void)
+{
+    uint8_t sn;
+    int port=66;
+    if ( ev3_search_tacho_plugged_in(port,0, &sn, 0 )) {
+      set_tacho_position_sp(sn, -20);
+      set_tacho_speed_sp( sn, 1049);
+      set_tacho_command_inx(sn, TACHO_RUN_TO_REL_POS);
+      Sleep(500);
+    }
+}
+
+void get_ball(void)
+{
+    int motor_lift = 66;
+    sg_motor(motor_lift,800,-500);
+    Sleep(1000);
     /*
   uint8_t sn;
   uint8_t sn_throw;

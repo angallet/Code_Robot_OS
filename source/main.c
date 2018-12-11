@@ -69,7 +69,13 @@ int main( void )
         }
         printf( "\r(%f) \n", value);
         fflush( stdout );
-        if(value <= 60) get_ball();
+        if(value <= 60)
+        {
+            disable_catapult();
+            enable_catapult();
+            get_ball();
+            throw();
+        }
       }
 
       if ( _check_pressed( sn_touch )) break;
