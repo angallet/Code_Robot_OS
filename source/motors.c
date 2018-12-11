@@ -107,11 +107,7 @@ void disable_catapult(void)
     uint8_t sn;
     int port=67;
     if ( ev3_search_tacho_plugged_in(port,0, &sn, 0 )) {
-<<<<<<< HEAD
         printf("disable_catapult\n");
-=======
-        printf("disable_catapult\n", );
->>>>>>> b01b2156843731eec2d5f12576ccc7891a382bd2
 
       set_tacho_position_sp(sn, 20);
       set_tacho_speed_sp( sn, 1049);
@@ -125,11 +121,7 @@ void enable_catapult(void)
     uint8_t sn;
     int port=67;
     if ( ev3_search_tacho_plugged_in(port,0, &sn, 0 )) {
-<<<<<<< HEAD
         printf("enable_catapult\n" );
-=======
-        printf("enable_catapult\n", );
->>>>>>> b01b2156843731eec2d5f12576ccc7891a382bd2
 
       set_tacho_position_sp(sn, -20);
       set_tacho_speed_sp( sn, 1049);
@@ -141,11 +133,7 @@ void enable_catapult(void)
 void get_ball(void)
 {
     int motor_lift = 66;
-<<<<<<< HEAD
     printf("get_ball\n" );
-=======
-    printf("get_ball\n", );
->>>>>>> b01b2156843731eec2d5f12576ccc7891a382bd2
 
     sg_motor(motor_lift,800,-500);
     Sleep(1000);
