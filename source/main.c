@@ -72,6 +72,7 @@ int main( void )
         if(value <= 60)
         {
             disable_catapult();
+            Sleep(1000);
             enable_catapult();
             get_ball();
             throw();
