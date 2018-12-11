@@ -17,6 +17,7 @@
 #define MSG_KICK    3
 #define MSG_SCORE 	    4
 #define MSG_CUSTOM 	    8
+#define MESSAGE_MAX_LENGHT    58
 
 #define Sleep( msec ) usleep(( msec ) * 1000 )
 
@@ -57,12 +58,67 @@ void bluetooth_received_stop(void)
 
 void bluetooth_received_kick(void)
 {
-  char send_message[6];
-  send_message;
+
 }
 
 void bluetooth_send_score(int score)
 {
 
 
+}
+
+void *bluetooth_main(void *arg) {
+        char receive_message[MESSAGE_MAX_LENGHT];
+        uint16_t message_id;
+
+        while (alive) {
+                while (alive && (bluetooth_state == DISCONNECTED)) {                  // If not connected, try to reconnect every
+                        sleep( RECONNEXION_PERIOD_SEC );
+                        init_bluetooth();
+                }
+                if (!alive) break;                                          // Quit faster
+
+                int bytes_read = read(s, receive_message, MESSAGE_MAX_LENGHT); // Block until a message is received
+
+                if (bytes_read < 0) {                                       // Test if server is still alive
+                        print_error("Server unexpectedly closed connection...");
+                        bluetooth_state = DISCONNECTED;
+                        close(s);
+                        continue;
+                }
+                if ( bytes_read == 0 ) continue;                    // Timeout
+                if ( bytes_read < 5 ) continue;                     // Bad format
+                if (receive_message[MSG_SRC] != SERVER_TEAM_ID) continue;  // Bad sender (to prevent from other robot attack)
+                if (receive_message[MSG_DST] != TEAM_ID) continue;  // Bad destination
+
+                switch(receive_message[MSG_TYPE]) {
+                case MSG_TYPE_ACK:
+                        message_id = receive_message[6] << 8 | receive_message[5];
+                        if (message_id < ack_msg_id)
+                                print_error("Ack of an old message");
+                        if (message_id > msg_id)
+                                print_error("Ack of a message not sent yet");
+                        if (message_id > ack_msg_id + 1)
+                                print_error("Message(s) lost (ack not received)");
+                        if (receive_message[7] != 0)
+                                print_error("Message misunderstood by server");
+                        ack_msg_id = message_id;
+                        break;
+                case MSG_TYPE_START:
+                        print_console("Game start sent by server");
+                        start_received();
+                        break;
+                case MSG_TYPE_STOP:
+                        print_console("Game stop sent by server");
+                        stop_received();
+                        break;
+                case MSG_TYPE_KICK:
+                        print_error("Defendum got kicked by server");
+                        kicked();
+                        break;
+                }
+        }
+        close(s);
+        bluetooth_state = DISCONNECTED;
+        pthread_exit(NULL);
 }
