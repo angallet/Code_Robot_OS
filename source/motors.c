@@ -44,7 +44,7 @@ void move_forward (int distance)
 {
   uint8_t sn;
   int port=65;
-  int time= (int)distance/13.6;
+  int time= (int)(distance/13.6)*1000;
   printf("the robot will run during : %d\n",time);
   sg_motor(port, time, SPEED);
   port=68;
