@@ -37,14 +37,13 @@ void quarter_turn(void)
 }
 */
 
-//distance in centimeter
 void move_forward (int distance)
 {
   uint8_t sn;
   int port=65;
   int deg=360;
-  deg = (int)(distance/(M_PI*5.6))*360
-  print("%d\n",deg);
+  deg = (int)(distance/(M_PI*5.6))*2*360;
+  printf("%d\n",deg);
   sg_motor_deg(port, deg, SPEED);
   port=68;
   sg_motor_deg(port, deg, SPEED);
@@ -57,19 +56,20 @@ void turn (int degree)
     uint8_t sn;
     int port =65;
     int deg = degree;
-    print("%d\n",deg);
+    printf("%d\n",deg);
     sg_motor_deg(port, deg, SPEED);
     port=68;
     sg_motor_deg(port, deg, SPEED);
 }
+
 
 void sg_motor_deg (int port, int deg, int speed)
 {
     uint8_t sn;
     if ( ev3_search_tacho_plugged_in(port,0, &sn, 0 )) {
       set_tacho_stop_action_inx( sn, TACHO_COAST );
-      set_tacho_position_sp(sn, deg);
-      set_tacho_speed_sp( sn, speed);
+      set_tacho_position_sp(sn, 140);
+      set_tacho_speed_sp( sn, 300);
       set_tacho_command_inx(sn, TACHO_RUN_TO_REL_POS);
     }
 }
@@ -192,6 +192,8 @@ void get_ball(void)
   */
 }
 
+/*
+
 void get_ball_2(void){
     int motor_lift = 66;
     uint8_t sn;
@@ -202,7 +204,7 @@ void get_ball_2(void){
       Sleep(500);
     }
 }
-
+*/
 /*
 void search_ball(float *value)
 {
