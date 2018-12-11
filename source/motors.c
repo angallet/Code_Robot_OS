@@ -57,8 +57,8 @@ void turn (int degree)
 {
     uint8_t sn;
     int port =65;
-    int deg = (int)(((M_PI*12)/360)*degree)/(M_PI*5.6);
-    printf("%d\n",deg);
+    int deg = (int)((((M_PI*12)/360)*degree)/(M_PI*5.6))*360;
+    printf("The robot will rotate wheel %d degree\n",deg);
     sg_motor_deg(port, deg, SPEED);
     port=68;
     sg_motor_deg(port, deg, -SPEED);
@@ -70,8 +70,8 @@ void sg_motor_deg (int port, int deg, int speed)
     uint8_t sn;
     if ( ev3_search_tacho_plugged_in(port,0, &sn, 0 )) {
       set_tacho_stop_action_inx( sn, TACHO_COAST );
-      set_tacho_position_sp(sn, 140);
-      set_tacho_speed_sp( sn, 300);
+      set_tacho_position_sp(sn, deg);
+      set_tacho_speed_sp( sn, speed);
       set_tacho_command_inx(sn, TACHO_RUN_TO_REL_POS);
     }
 }
