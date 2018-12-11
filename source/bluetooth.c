@@ -1,3 +1,13 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <stdarg.h>
+#include <time.h>
+#include <sys/socket.h>
+#include <math.h>
+#include <bluetooth/bluetooth.h>
+#include <bluetooth/rfcomm.h>
+
 #define SERV_ADDR   "dc:53:60:ad:61:90"     /* Whatever the address of the server is */
 #define TEAM_ID     1                       /* Your team ID */
 
