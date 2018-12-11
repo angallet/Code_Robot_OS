@@ -66,6 +66,46 @@ void bluetooth_send_score(int score)
 
 
 }
+int s;                                          // Bluetooth socket
+enum BtState bluetooth_state = DISCONNECTED;    // State of connexion
+uint16_t msg_id = 0;                            // As msg_id++ is called before send, first message have id 1
+uint16_t ack_msg_id = 0;                        // Last acknowledged message (should be equal to msg_id)
+
+/**
+ * Function called to init the connexion with the server.
+ * Called on every connexion attempt
+ * @return  1 if connected, 0 otherwise
+ */
+int init_bluetooth( void )
+{
+        struct sockaddr_rc addr = { 0 };
+        int status;
+        //struct timeval timeout;
+        //timeout.tv_sec = READ_TIMEOUT_SEC;
+        //timeout.tv_usec = 0;
+
+        // allocate a socket
+        s = socket(AF_BLUETOOTH, SOCK_STREAM, BTPROTO_RFCOMM);
+        //setsockopt(s, SOL_SOCKET, SO_RCVTIMEO, (const char*)&timeout,sizeof(struct timeval));    // Set a timeout
+
+        // set the connection parameters (who to connect to)
+        addr.rc_family = AF_BLUETOOTH;
+        addr.rc_channel = (uint8_t) 1;
+        str2ba(SERV_ADDR, &addr.rc_bdaddr);
+
+        // connect to server
+        status = connect(s, (struct sockaddr *)&addr, sizeof(addr));
+
+        // if not connected
+        if( status != 0 ) {
+                print_error("Failed to connect to server...");
+                bluetooth_state = DISCONNECTED;
+                return ( 1 ); // TODO change to 0 when server is available
+        }
+        bluetooth_state = CONNECTED;
+        return ( 1 );
+}
+
 
 void *bluetooth_main(void *arg) {
         char receive_message[MESSAGE_MAX_LENGHT];
