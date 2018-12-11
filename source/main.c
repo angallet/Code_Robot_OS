@@ -80,7 +80,7 @@ int main( void )
             Sleep(7000);
             get_ball();
             throw();*/
-            move_forward(300);
+            move_forward(136);
         }
       }
 

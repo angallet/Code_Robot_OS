@@ -36,12 +36,15 @@ void quarter_turn(void)
       set_tacho_speed_sp( sn, max_speed/5);
 }
 */
-
+//136cm/10s
+//0.136m/s
+//13,6cm/s
+//distance in centimeter
 void move_forward (int distance)
 {
   uint8_t sn;
   int port=65;
-  int time=10000;
+  int time= (int)distance/13.6;
   printf("the robot will run during : %d\n",time);
   sg_motor(port, time, SPEED);
   port=68;
@@ -54,7 +57,7 @@ void turn (int degree)
 {
     uint8_t sn;
     int port =65;
-    int deg = (int)(((M_PI*12)%360)*degree)/(M_PI*5.6);
+    int deg = (int)(((M_PI*12)/360)*degree)/(M_PI*5.6);
     printf("%d\n",deg);
     sg_motor_deg(port, deg, SPEED);
     port=68;
