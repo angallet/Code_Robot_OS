@@ -55,13 +55,13 @@ void move_forward (int distance)
 //width of the robot (measure at the center of the wheel ) 12cm
 void turn (int degree)
 {
-    uint8_t sn;
-    int port =65;
-    int deg = (int)(12*degree)/(5.6));
-    printf("The robot will rotate wheel %d degree\n",deg);
-    sg_motor_deg(port, deg, SPEED);
-    port=68;
-    sg_motor_deg(port, deg, -SPEED);
+      uint8_t sn;
+      int port=65;
+      int time;
+      time = 3*degree; // 540/180 : 540 time 
+      sg_motor(port, time, 300);
+      port=68;
+      sg_motor(port, time, -300);
 }
 
 
