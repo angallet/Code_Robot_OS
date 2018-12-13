@@ -6,4 +6,4 @@ void quarter_turn (void);
 void throw (void);
 void get_ball(void);
 void turn (int degree);
-//void search_ball(float value);
+void search_ball(void);
