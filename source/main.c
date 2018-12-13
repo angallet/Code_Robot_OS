@@ -71,10 +71,16 @@ int main( void )
         fflush( stdout );
         if(value <= 60)
         {
+          /*
             disable_catapult();
+            //Sleep(1000);
+            move_forward(1000);
+            Sleep(500);
             enable_catapult();
+            Sleep(7000);
             get_ball();
-            throw();
+            throw();*/
+            move_forward(136);
         }
       }
 
