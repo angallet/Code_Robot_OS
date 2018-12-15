@@ -233,7 +233,7 @@ void search_ball(void)
 {
     if (ev3_search_sensor(LEGO_EV3_US, &sn_sonar,0)){
 
-        for(int i=0, i < 36, i++)
+        for(int i=0; i < 36; i++)
         {
           turn(5);
 
