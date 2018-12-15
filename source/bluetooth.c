@@ -8,7 +8,9 @@
 #include <bluetooth/bluetooth.h>
 #include <bluetooth/rfcomm.h>
 
-#define SERV_ADDR   "A0:E6:F8:DC:88:B9"     /* Whatever the address of the server is */
+#include "bluetooth.h"
+
+*#define SERV_ADDR   "A0:E6:F8:TYPE_POSITIONDC:88:B9"      Whatever the address of the server is */
 #define TEAM_ID     2                       /* Your team ID */
 
 #define MSG_ACK     0
@@ -16,12 +18,12 @@
 #define MSG_STOP   2
 #define MSG_KICK    3
 #define MSG_SCORE 	    4
-#define MSG_CUSTOM 	    8
-#define MESSAGE_MAX_LENGHT    58
+#define MSG_CUSTOM 	    58
+#define RES_SCORE 3
 
 #define Sleep( msec ) usleep(( msec ) * 1000 )
 
-int read_from_server (int sock, char *buffer, size_t maxSize) {
+/*int read_from_server (int sock, char *buffer, size_t maxSize) {
   int bytes_read = read (sock, buffer, maxSize);
 
   if (bytes_read <= 0) {
@@ -33,46 +35,23 @@ int read_from_server (int sock, char *buffer, size_t maxSize) {
   printf ("[DEBUG] received %d bytes\n", bytes_read);
 
   return bytes_read;
-}
+}*/
 
 
-void bluetooth_send_ack(void)
-{
-          char send_message[8];
-          ((uint16_t *) send_message) = msg_id++;
-          send_message[MSG_ID_LSB] = *((char *) &(msg_id));
-          send_message[MSG_ID_MSB] = *(((char *) &(msg_id))+1);
-          send_message[MSG_SRC] = TEAM_ID;
-          send_message[MSG_DST] = SERV_ADDR;
-          send_message[MSG_TYPE] = MSG_ACK;
 
-
-  write(s, send_message, 9);
-
-}
-
-void bluetooth_received_ack(void)
-{
-
-}
-
-void bluetooth_received_start(void)
-{
-
-}
-
-void bluetooth_received_stop(void)
-{
-
-}
-
-void bluetooth_received_kick(void)
-{
-
-}
 
 void bluetooth_send_score(int score)
 {
+          char send_message[6];
+          msg_id++;
+          send_message[MSG_ID_LSB] = *((char *) &(msg_id));
+          send_message[MSG_ID_MSB] = *(((char *) &(msg_id))+1);
+          send_message[MSG_SRC] = TEAM_ID;
+          send_message[MSG_DST] = SERVER_TEAM_ID;
+          send_message[MSG_TYPE] = MSG_SCORE;
+          send_message[6]=RES_SCORE;
+
+          write(s, send_message, 9);
 
 
 }
@@ -117,18 +96,6 @@ int init_bluetooth( void )
         return ( 1 );
 }
 
-        status = connect(s, (struct sockaddr *)&addr, sizeof(addr));
-
-        // if not connected
-        if( status != 0 ) {
-                print_error("Failed to connect to server...");
-                bluetooth_state = DISCONNECTED;
-                return ( 1 ); // TODO change to 0 when server is available
-        }
-        bluetooth_state = CONNECTED;
-        return ( 1 );
-}
-
 
 
 void *bluetooth_main(void *arg) {
@@ -156,7 +123,7 @@ void *bluetooth_main(void *arg) {
                 if (receive_message[MSG_DST] != TEAM_ID) continue;  // Bad destination
 
                 switch(receive_message[MSG_TYPE]) {
-                case MSG_TYPE_ACK:
+                case MSG_ACK:
                         message_id = receive_message[6] << 8 | receive_message[5];
                         if (message_id < ack_msg_id)
                                 print_error("Ack of an old message");
@@ -168,15 +135,15 @@ void *bluetooth_main(void *arg) {
                                 print_error("Message misunderstood by server");
                         ack_msg_id = message_id;
                         break;
-                case MSG_TYPE_START:
+                case MSG_START:
                         print_console("Game start sent by server");
                         start_received();
                         break;
-                case MSG_TYPE_STOP:
+                case MSG_STOP:
                         print_console("Game stop sent by server");
                         stop_received();
                         break;
-                case MSG_TYPE_KICK:
+                case MSG_KICK:
                         print_error("Defendum got kicked by server");
                         kicked();
                         break;
