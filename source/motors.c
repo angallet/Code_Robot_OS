@@ -55,6 +55,7 @@ void move_forward (int distance)
 //width of the robot (measure at the center of the wheel ) 12cm
 void turn (int degree)
 {
+      printf("enter into the function turn\n");
       uint8_t sn;
       int port=65;
       int time;
