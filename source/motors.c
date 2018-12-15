@@ -59,7 +59,7 @@ void turn (int degree)
       uint8_t sn;
       int port=65;
       int time;
-      time = 3*degree; // 540/180 : 540 time
+      time = 6*degree; // 540/180 : 540 time
       sg_motor(port, time, 300);
       port=68;
       sg_motor(port, time, -300);
