@@ -51,9 +51,7 @@ void move_forward (int distance)
   sg_motor(port, time, SPEED);
 }
 
-
-//width of the robot (measure at the center of the wheel ) 12cm
-void turn (int degree)
+void turn_left (int degree)
 {
       //printf("enter into the function turn\n");
       uint8_t sn;
@@ -63,6 +61,20 @@ void turn (int degree)
       sg_motor(port, time, 30);
       port=68;
       sg_motor(port, time, -30);
+      Sleep(time);
+}
+
+
+void turn_right (int degree)
+{
+      //printf("enter into the function turn\n");
+      uint8_t sn;
+      int port=65;
+      int time;
+      time = 60*degree; // 540/180 : 540 time  3 factor
+      sg_motor(port, time, -30);
+      port=68;
+      sg_motor(port, time, 30);
       Sleep(time);
 }
 
@@ -241,7 +253,7 @@ void search_ball(void)
     if (ev3_search_sensor(LEGO_EV3_US, &sn_sonar,0)){
         for(i=0; i < 36; i++)
         {
-          turn(5);
+          turn_left(5);
           if ( !get_sensor_value0(sn_sonar, &value )) {
             value = 0;
           }

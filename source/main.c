@@ -81,7 +81,7 @@ int main( void )
             get_ball();
             throw();
             move_forward(136);
-            turn(45);*/
+            turn_left(45);*/
             search_ball();
         }
       }
