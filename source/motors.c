@@ -63,6 +63,7 @@ void turn (int degree)
       sg_motor(port, time, 30);
       port=68;
       sg_motor(port, time, -30);
+      Sleep(time);
 }
 
 
@@ -235,13 +236,11 @@ void search_ball(void)
     int i;
     float value;
     uint8_t sn_sonar;
+    printf("SONAR found, reading sonar. It will print 36 values \n");
     if (ev3_search_sensor(LEGO_EV3_US, &sn_sonar,0)){
-
         for(i=0; i < 36; i++)
         {
           turn(5);
-
-          printf("SONAR found, reading sonar...\n");
           if ( !get_sensor_value0(sn_sonar, &value )) {
             value = 0;
           }

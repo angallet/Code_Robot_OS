@@ -80,8 +80,9 @@ int main( void )
             Sleep(7000);
             get_ball();
             throw();
-                move_forward(136);*/
-            turn(45);
+            move_forward(136);
+            turn(45);*/
+            search_ball();
         }
       }
 
