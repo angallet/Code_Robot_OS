@@ -231,9 +231,12 @@ void search_ball(float *value)
 
 void search_ball(void)
 {
+    int i;
+    float value;
+    uint8_t sn_sonar;
     if (ev3_search_sensor(LEGO_EV3_US, &sn_sonar,0)){
 
-        for(int i=0; i < 36; i++)
+        for(i=0; i < 36; i++)
         {
           turn(5);
 
