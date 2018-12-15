@@ -55,7 +55,7 @@ void move_forward (int distance)
 //width of the robot (measure at the center of the wheel ) 12cm
 void turn (int degree)
 {
-      printf("enter into the function turn\n");
+      //printf("enter into the function turn\n");
       uint8_t sn;
       int port=65;
       int time;
@@ -82,8 +82,8 @@ void sg_motor (int port, int time, int speed)
 {
     uint8_t sn;
     if ( ev3_search_tacho_plugged_in(port,0, &sn, 0 )) {
-      printf( "LEGO_EV3_M_MOTOR 1 is found, run...\n" );
-      printf("  speed = %d\n", speed );
+      //printf( "LEGO_EV3_M_MOTOR 1 is found, run...\n" );
+      //printf("  speed = %d\n", speed );
       set_tacho_stop_action_inx( sn, TACHO_COAST );
       set_tacho_speed_sp( sn, speed);
       set_tacho_time_sp( sn, time );
@@ -236,6 +236,7 @@ void search_ball(void)
     int i;
     float value;
     uint8_t sn_sonar;
+    int angle;
     printf("SONAR found, reading sonar. It will print 36 values \n");
     if (ev3_search_sensor(LEGO_EV3_US, &sn_sonar,0)){
         for(i=0; i < 36; i++)
@@ -244,7 +245,8 @@ void search_ball(void)
           if ( !get_sensor_value0(sn_sonar, &value )) {
             value = 0;
           }
-          printf( "\r(%f) \n", value);
+          angle = i*5;
+          printf( "\r%d : %f \n", angle, value);
           fflush( stdout );
         }
     }
