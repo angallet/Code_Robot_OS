@@ -79,8 +79,9 @@ int main( void )
             enable_catapult();
             Sleep(7000);
             get_ball();
-            throw();*/
-            move_forward(136);
+            throw();
+                move_forward(136);*/
+            search_ball();
         }
       }
 
