@@ -39,16 +39,9 @@ void *bluetooth_main( void *arg );
 int read_from_server (int sock, char *buffer, size_t maxSize);
 
 
-void bluetooth_send_ack(void);
-
-void bluetooth_received_ack(void);
-
-void bluetooth_received_start(void);
-
-void bluetooth_received_stop(void);
-
-void bluetooth_received_kick(void);
-
+void start_received();
+void stop_received();
+void kicked();
 void bluetooth_send_score(int score);
 void bluetooth_close();
 

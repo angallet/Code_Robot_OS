@@ -10,7 +10,7 @@
 
 #include "bluetooth.h"
 
-*#define SERV_ADDR   "A0:E6:F8:TYPE_POSITIONDC:88:B9"      Whatever the address of the server is */
+*#define SERV_ADDR   "A0:E6:F8:88:B9"      Whatever the address of the server is */
 #define TEAM_ID     2                       /* Your team ID */
 
 #define MSG_ACK     0
