@@ -49,7 +49,21 @@ void move_forward (int distance)
   sg_motor(port, time, SPEED);
   port=68;
   sg_motor(port, time, SPEED);
+  Sleep(time);
 }
+
+void move_backward (int distance)
+{
+  uint8_t sn;
+  int port=65;
+  int time= (int)(distance/12.6)*1000;
+  printf("the robot will run during : %d\n",time);
+  sg_motor(port, time, -SPEED);
+  port=68;
+  sg_motor(port, time, -SPEED);
+  Sleep(time);
+}
+
 
 void turn_left (int degree)
 {
@@ -157,7 +171,7 @@ void disable_catapult(void)
       set_tacho_speed_sp( sn, 500);
       set_tacho_command_inx(sn, TACHO_RUN_TO_REL_POS);
 
-      Sleep(500);
+      Sleep(1000);
     }
 }
 
@@ -172,7 +186,7 @@ void enable_catapult(void)
       set_tacho_speed_sp( sn, 500);
       set_tacho_command_inx(sn, TACHO_RUN_TO_REL_POS);
       set_tacho_stop_action_inx( sn, TACHO_COAST );
-      Sleep(500);
+      Sleep(1000);
 
 
     }
@@ -252,5 +266,20 @@ void search_ball(void)
           previous_value = current_value;
           fflush( stdout );
         }
+        turn_left(5);
+        turn_left(180);
+        disable_catapult();
+        move_forward(current_value/10);
+        enable_catapult();
+        get_ball();
+        move_backward(current_value/10);
+        turn_right(180);
+        while(i>0)
+        {
+          turn_right(5);
+          i--;
+        }
+        turn_right(5);
+        throw();
     }
 }

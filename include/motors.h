@@ -7,3 +7,4 @@ void throw (void);
 void get_ball(void);
 void turn (int degree);
 void search_ball(void);
+void move_backward (int distance);
