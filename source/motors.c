@@ -246,7 +246,7 @@ void search_ball(void)
           if (abs(current_value - previous_value) > threshold) {
               printf("Ball detected\n");
               fflush( stdout );
-              Sleep(5);
+              Sleep(5000);
               break;
           }
           previous_value = current_value;
