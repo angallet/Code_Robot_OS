@@ -31,6 +31,7 @@ int main( void )
 
     //Run all sensors
     ev3_sensor_init();
+    search_ball();
 
     printf( "Found sensors:\n" );
     for ( i = 0; i < DESC_LIMIT; i++ ) {
@@ -81,8 +82,8 @@ int main( void )
             get_ball();
             throw();
             move_forward(136);
-            turn_left(45);*/
-            search_ball();
+            turn_left(45);
+            search_ball();*/
         }
       }
 
