@@ -221,44 +221,31 @@ void get_ball_2(void){
     }
 }
 */
-/*
-void search_ball(float *value)
-{
-
-    int prev_distance=10000;
-    int threshold = 300;
-    uint8_t sn_sonar;
-    if (ev3_search_sensor(LEGO_EV3_US, &sn_sonar,0)){
-    while(abs(get_sensor_value(sn_sonar, &value )-prev_distance)<threshold) //threshold à déterminer expérimentalement
-    {
-      quarter_turn();
-      Sleep(1000);
-      prev_distance = get_sensor_value(sn_sonar, &value);
-    }
-    move_forward(prev_distance);
-    get_ball();
-  }
-}
-
-
-*/
 
 void search_ball(void)
 {
     int i;
-    float value;
+    float current_value, previous_value;
     uint8_t sn_sonar;
     int angle;
+    int prev_distance=10000;
+    int threshold = 300;
     printf("SONAR found, reading sonar. It will print 36 values \n");
     if (ev3_search_sensor(LEGO_EV3_US, &sn_sonar,0)){
         for(i=0; i < 36; i++)
         {
           turn_left(5);
-          if ( !get_sensor_value0(sn_sonar, &value )) {
-            value = 0;
-          }
           angle = i*5;
-          printf( "\r%d : %f \n", angle, value);
+          if ( !get_sensor_value0(sn_sonar, &current_value )) {
+            current_value = 0;
+          }
+          printf( "\r%d : current value %f, previous value %f \n", angle, current_value,previous_value);
+          if (abs(current_value - previous_value) > threshold) {
+              printf("Ball detected\n");
+              fflush( stdout );
+              break;
+          }
+          previous_value = current_value;
           fflush( stdout );
         }
     }
