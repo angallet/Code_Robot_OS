@@ -1,4 +1,4 @@
-# The structure of the project is : 
+# The structure of the project is :
 # 	root/
 #		Makefile (this file)
 #		ev3dev-c/
@@ -13,17 +13,23 @@
 CC         =arm-linux-gnueabi-gcc
 CFLAGS     =-O2 -std=gnu99 -W -Wall -Wno-comment -g
 INCLUDES   =-I./ev3dev-c/source/ev3 -I./include/
-LDFLAGS    =-lm -lev3dev-c -L./libraries -lrt -lpthread #-lbluetooth
+LDFLAGS    =-lm -lev3dev-c -L./libraries -lrt -lpthread -lbluetooth
 BUILD_DIR  = ./build
 SOURCE_DIR = ./source
-IP        ?= 192.168.137.3 # the IP can be override by the user with the use of argument make send IP=X.X.X.X 
+IP        ?= 192.168.137.3 # the IP can be override by the user with the use of argument make send IP=X.X.X.X
 
 #here all the file we have to use to compile the program
 OBJS = \
 	$(BUILD_DIR)/main.o \
 	$(BUILD_DIR)/motors.o \
+	$(BUILD_DIR)/bluetooth.o \
 
 all: main
+
+
+
+
+
 
 main: ${OBJS}
 	$(CC) $(INCLUDES) $(CFLAGS) $(OBJS) $(LDFLAGS) -o main
