@@ -232,6 +232,9 @@ void search_ball(void)
     int threshold = 300;
     printf("SONAR found, reading sonar. It will print 36 values \n");
     if (ev3_search_sensor(LEGO_EV3_US, &sn_sonar,0)){
+        if ( !get_sensor_value0(sn_sonar, &previous_value )) {
+            previous_value = 0;
+        }
         for(i=0; i < 36; i++)
         {
           turn_left(5);
