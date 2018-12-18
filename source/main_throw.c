@@ -19,7 +19,7 @@
 #define Sleep( msec ) usleep(( msec ) * 1000 )
 const char const *color[] = { "?", "BLACK", "BLUE", "GREEN", "YELLOW", "RED", "WHITE", "BROWN" };
 #define COLOR_COUNT  (( int )( sizeof( color ) / sizeof( color[ 0 ])))
-#define SERV_ADDR       "A0:E6:F8:DC:88:B9"  /* Whatever the address of the server is */
+#define SERV_ADDR       "3C:A0:67:9C:64:BC"  /* Whatever the address of the server is */
 #define TEAM_ID     2                       /* Your team ID */
 
 #define MSG_ACK     0
@@ -95,13 +95,6 @@ int main( int argc, char **argv )
   int status;
 
     if ( ev3_init() == -1 ) return ( 1 );
-    while ( ev3_tacho_init() < 1 ) Sleep( 1000 );
-    printf( "*** ( EV3 ) Hello! ***\n" );
-
-    //Run all sensors
-    ev3_sensor_init();
-    throw();
-    Sleep( 5000 );
     /* allocate a socket */
     s = socket(AF_BLUETOOTH, SOCK_STREAM, BTPROTO_RFCOMM);
 
@@ -124,6 +117,14 @@ int main( int argc, char **argv )
 
 
       }
+    while ( ev3_tacho_init() < 1 ) Sleep( 1000 );
+    printf( "*** ( EV3 ) Hello! ***\n" );
+
+    //Run all sensors
+    ev3_sensor_init();
+    throw();
+    Sleep( 5000 );
+
       robot();
       close (s);
 
