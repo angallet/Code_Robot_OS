@@ -20,7 +20,7 @@
 const char const *color[] = { "?", "BLACK", "BLUE", "GREEN", "YELLOW", "RED", "WHITE", "BROWN" };
 #define COLOR_COUNT  (( int )( sizeof( color ) / sizeof( color[ 0 ])))
 #define SERV_ADDR       "3C:A0:67:9C:64:BC"  /* Whatever the address of the server is */
-#define TEAM_ID     2                       /* Your team ID */
+#define TEAM_ID     1                       /* Your team ID */
 
 #define MSG_ACK     0
 #define MSG_START    1
@@ -57,7 +57,6 @@ void robot () {
   srand(time(NULL));
   /* Send 3 SCORE messages */
   int i;
-  for (i=0; i<30; i++){
     *((uint16_t *) string) = msgId++;
     string[2] = TEAM_ID;
     string[3] = 0xFF;
@@ -65,7 +64,7 @@ void robot () {
     string[5] = 3;          /* x */
     write(s, string, 6);
     Sleep( 1000 );
-  }
+
 
 
   printf("I'm waiting for the stop message");
