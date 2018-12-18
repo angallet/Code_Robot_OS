@@ -258,25 +258,25 @@ void search_ball(void)
             current_value = 0;
           }
           printf( "\r%d : current value %f, previous value %f \n", angle, current_value,previous_value);
-          if ((previous_value - current_value) > threshold) && (current_value < 500)) {
+          if ((previous_value - current_value > threshold) && (previous_value < 500)) {
               printf("Ball detected\n");
               fflush( stdout );
               Sleep(5000);
               break;
               flag_detected = 1;
           }
-          if ((current_value - previous_value) > threshold) && (current_value < 500)) {
+          if ((current_value - previous_value > threshold) && (previous_value < 500)) {
               printf("Ball missed but then detected\n");
               fflush( stdout );
-              turn_right(5);
+              turn_right(6);
               Sleep(5000);
               flag_detected = 1;
               break;
           }
-          }
           previous_value = current_value;
           fflush( stdout );
         }
+<<<<<<< HEAD
         if (flag_detected){
             turn_left(5);
             turn_left(162);
@@ -287,6 +287,16 @@ void search_ball(void)
             move_backward(current_value/10 +5);
             turn_right(162);
         }
+=======
+        turn_left(6);
+        turn_left(162);
+        disable_catapult();
+        move_forward(current_value/10 + 10);
+        enable_catapult();
+        get_ball();
+        move_backward(current_value/10 +10);
+        turn_right(162);
+>>>>>>> db3a34f948ba22e310ae4d3a806deed4f70223c2
         while(i>0)
         {
           turn_right(5);
