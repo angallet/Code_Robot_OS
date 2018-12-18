@@ -264,11 +264,12 @@ void search_ball(void)
               break;
           }
           if ((current_value - previous_value) > threshold) && (current_value < 500)) {
-            printf("Ball missed but then detected\n");
-            fflush( stdout );
-            turn_right(6);
-            Sleep(5000);
-            break;
+              printf("Ball missed but then detected\n");
+              fflush( stdout );
+              turn_right(5);
+              Sleep(5000);
+              break;
+          }
           }
           previous_value = current_value;
           fflush( stdout );
