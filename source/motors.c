@@ -192,34 +192,17 @@ void enable_catapult(void)
     }
 }
 
-void get_ball(void)
+void get_ball(int move_value)
 {
     int motor_lift = 66;
     printf("get_ball\n" );
-
+    disable_catapult();
+    move_forward(move_value/10 + 10);
+    enable_catapult();
+    // turn the little motor
     sg_motor(motor_lift,1000,-300);
     Sleep(3000);
-    /*
-  uint8_t sn;
-  uint8_t sn_throw;
-  int port=67;
-  int port_throw=66;
-  if ( ev3_search_tacho_plugged_in(port,0, &sn, 0 ) && ev3_search_tacho_plugged_in(port_throw,0, &sn, 0 ))
-  {
-      set_tacho_position_sp(sn, -100);
-      set_tacho_speed_sp( sn, 1049);
-      set_tacho_command_inx(sn, TACHO_RUN_TO_REL_POS);
-      Sleep(3000);
-      set_tacho_speed_sp( sn, 0);
-      set_tacho_time_sp( sn, 5000 );
-      set_tacho_command_inx(sn, TACHO_RUN_TIMED);
-      set_tacho_position_sp(sn_throw, 80);
-      set_tacho_command_inx(sn, TACHO_RUN_TO_REL_POS);
-      Sleep(3000);
-      throw();
-      Sleep(5000);
-  }
-  */
+    move_backward(move_value/10 + 10);
 }
 
 /*
@@ -276,27 +259,12 @@ void search_ball(void)
           previous_value = current_value;
           fflush( stdout );
         }
-<<<<<<< HEAD
         if (flag_detected){
-            turn_left(5);
+            turn_left(6);
             turn_left(162);
-            disable_catapult();
-            move_forward(current_value/10 + 5);
-            enable_catapult();
-            get_ball();
-            move_backward(current_value/10 +5);
+            get_ball(current_value);
             turn_right(162);
         }
-=======
-        turn_left(6);
-        turn_left(162);
-        disable_catapult();
-        move_forward(current_value/10 + 10);
-        enable_catapult();
-        get_ball();
-        move_backward(current_value/10 +10);
-        turn_right(162);
->>>>>>> db3a34f948ba22e310ae4d3a806deed4f70223c2
         while(i>0)
         {
           turn_right(5);
@@ -310,7 +278,7 @@ void search_ball(void)
 }
 
 
-void search_ball_left(void)
+void search_ball_right(void)
 {
     int i;
     float current_value, previous_value;
@@ -352,13 +320,13 @@ void search_ball_left(void)
           fflush( stdout );
         }
         if (flag_detected){
-            turn_right(5);
+            turn_right(6);
             turn_right(162);
             disable_catapult();
-            move_forward(current_value/10 + 5);
+            move_forward(current_value/10 + 10);
             enable_catapult();
             get_ball();
-            move_backward(current_value/10 +5);
+            move_backward(current_value/10 + 10);
             turn_left(162);
         }
         while(i>0)
