@@ -271,7 +271,7 @@ void search_ball(void)
             get_ball(current_value);
             turn_right(165);
         }
-        while(i>0)
+        while(i>1)
         {
           turn_right(5);
           printf("%d\n",i);

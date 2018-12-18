@@ -13,7 +13,7 @@
 CC         =arm-linux-gnueabi-gcc
 CFLAGS     =-O2 -std=gnu99 -W -Wall -Wno-comment -g
 INCLUDES   =-I./ev3dev-c/source/ev3 -I./include/
-LDFLAGS    =-lm -lev3dev-c -L./libraries -lrt -lpthread #-lbluetooth
+LDFLAGS    =-lm -lev3dev-c -L./libraries -lrt -lpthread -lbluetooth
 BUILD_DIR  = ./build
 BUILD_DIR_THROW =./build_throw
 SOURCE_DIR = ./source
@@ -46,7 +46,7 @@ $(BUILD_DIR)/%.o: $(SOURCE_DIR)/%.c
 throw: main_throw
 
 main_throw: ${OBJS_THROW}
-	$(CC) $(INCLUDES) $(CFLAGS) $(OBJS) $(LDFLAGS) -o main_throw
+	$(CC) $(INCLUDES) $(CFLAGS) $(OBJS_THROW) $(LDFLAGS) -o main_throw
 
 $(OBJS_THROW): $(BUILD_DIR_THROW)
 
@@ -68,3 +68,4 @@ send:
 clean:
 	rm -rf *.o
 	rm ./main
+	rm ./main_throw
