@@ -32,6 +32,7 @@ int main( void )
     //Run all sensors
     ev3_sensor_init();
 
+
     printf( "Found sensors:\n" );
     for ( i = 0; i < DESC_LIMIT; i++ ) {
       if ( ev3_sensor[ i ].type_inx != SENSOR_TYPE__NONE_ ) {
@@ -49,6 +50,7 @@ int main( void )
         }
       }
     }
+
     if ( ev3_search_sensor( LEGO_EV3_TOUCH, &sn_touch, 0 )) {
       printf( "TOUCH sensor is found, press BUTTON for EXIT...\n" );
     }
@@ -69,7 +71,7 @@ int main( void )
         }
         printf( "\r(%f) \n", value);
         fflush( stdout );
-        if(value <= 60)
+        if(value <= 2550)
         {
           /*
             disable_catapult();
@@ -81,7 +83,8 @@ int main( void )
             get_ball();
             throw();
             move_forward(136);
-            turn(45);*/
+            turn_left(45);
+            search_ball();*/
             search_ball();
         }
       }

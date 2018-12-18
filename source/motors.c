@@ -49,11 +49,23 @@ void move_forward (int distance)
   sg_motor(port, time, SPEED);
   port=68;
   sg_motor(port, time, SPEED);
+  Sleep(time);
+}
+
+void move_backward (int distance)
+{
+  uint8_t sn;
+  int port=65;
+  int time= (int)(distance/12.6)*1000;
+  printf("the robot will run during : %d\n",time);
+  sg_motor(port, time, -SPEED);
+  port=68;
+  sg_motor(port, time, -SPEED);
+  Sleep(time);
 }
 
 
-//width of the robot (measure at the center of the wheel ) 12cm
-void turn (int degree)
+void turn_left (int degree)
 {
       //printf("enter into the function turn\n");
       uint8_t sn;
@@ -63,6 +75,20 @@ void turn (int degree)
       sg_motor(port, time, 30);
       port=68;
       sg_motor(port, time, -30);
+      Sleep(time);
+}
+
+
+void turn_right (int degree)
+{
+      //printf("enter into the function turn\n");
+      uint8_t sn;
+      int port=65;
+      int time;
+      time = 60*degree; // 540/180 : 540 time  3 factor
+      sg_motor(port, time, -30);
+      port=68;
+      sg_motor(port, time, 30);
       Sleep(time);
 }
 
@@ -145,7 +171,7 @@ void disable_catapult(void)
       set_tacho_speed_sp( sn, 500);
       set_tacho_command_inx(sn, TACHO_RUN_TO_REL_POS);
 
-      Sleep(500);
+      Sleep(1000);
     }
 }
 
@@ -160,40 +186,23 @@ void enable_catapult(void)
       set_tacho_speed_sp( sn, 500);
       set_tacho_command_inx(sn, TACHO_RUN_TO_REL_POS);
       set_tacho_stop_action_inx( sn, TACHO_COAST );
-      Sleep(500);
+      Sleep(1000);
 
 
     }
 }
 
-void get_ball(void)
+void get_ball(int move_value)
 {
     int motor_lift = 66;
     printf("get_ball\n" );
-
+    disable_catapult();
+    move_forward(move_value/10 + 10);
+    enable_catapult();
+    // turn the little motor
     sg_motor(motor_lift,1000,-300);
     Sleep(3000);
-    /*
-  uint8_t sn;
-  uint8_t sn_throw;
-  int port=67;
-  int port_throw=66;
-  if ( ev3_search_tacho_plugged_in(port,0, &sn, 0 ) && ev3_search_tacho_plugged_in(port_throw,0, &sn, 0 ))
-  {
-      set_tacho_position_sp(sn, -100);
-      set_tacho_speed_sp( sn, 1049);
-      set_tacho_command_inx(sn, TACHO_RUN_TO_REL_POS);
-      Sleep(3000);
-      set_tacho_speed_sp( sn, 0);
-      set_tacho_time_sp( sn, 5000 );
-      set_tacho_command_inx(sn, TACHO_RUN_TIMED);
-      set_tacho_position_sp(sn_throw, 80);
-      set_tacho_command_inx(sn, TACHO_RUN_TO_REL_POS);
-      Sleep(3000);
-      throw();
-      Sleep(5000);
-  }
-  */
+    move_backward(move_value/10 + 10);
 }
 
 /*
@@ -209,45 +218,129 @@ void get_ball_2(void){
     }
 }
 */
-/*
-void search_ball(float *value)
-{
-
-    int prev_distance=10000;
-    int threshold = 300;
-    uint8_t sn_sonar;
-    if (ev3_search_sensor(LEGO_EV3_US, &sn_sonar,0)){
-    while(abs(get_sensor_value(sn_sonar, &value )-prev_distance)<threshold) //threshold à déterminer expérimentalement
-    {
-      quarter_turn();
-      Sleep(1000);
-      prev_distance = get_sensor_value(sn_sonar, &value);
-    }
-    move_forward(prev_distance);
-    get_ball();
-  }
-}
-
-
-*/
 
 void search_ball(void)
 {
     int i;
-    float value;
+    float current_value, previous_value;
     uint8_t sn_sonar;
     int angle;
+    int prev_distance=10000;
+    int threshold = 50;
+    int flag_detected = 0;
     printf("SONAR found, reading sonar. It will print 36 values \n");
     if (ev3_search_sensor(LEGO_EV3_US, &sn_sonar,0)){
+        if ( !get_sensor_value0(sn_sonar, &previous_value )) {
+            previous_value = 0;
+        }
         for(i=0; i < 36; i++)
         {
-          turn(5);
-          if ( !get_sensor_value0(sn_sonar, &value )) {
-            value = 0;
-          }
+          turn_left(5);
           angle = i*5;
-          printf( "\r%d : %f \n", angle, value);
+          if ( !get_sensor_value0(sn_sonar, &current_value )) {
+            current_value = 0;
+          }
+          printf( "\r%d : current value %f, previous value %f \n", angle, current_value,previous_value);
+          if ((previous_value - current_value > threshold) && (previous_value < 500)) {
+              printf("Ball detected\n");
+              fflush( stdout );
+              Sleep(5000);
+              printf("%d\n",i);
+              fflush( stdout );
+
+              flag_detected = 1;
+              break;
+          }
+          if ((current_value - previous_value > threshold) && (previous_value < 500)) {
+              printf("Ball missed but then detected\n");
+              turn_right(10);
+              Sleep(5000);
+              flag_detected = 1;
+              printf("%d\n",i);
+              fflush( stdout );
+
+              i -= 3;
+              break;
+          }
+          previous_value = current_value;
           fflush( stdout );
+        }
+        if (flag_detected){
+            turn_left(6);
+            turn_left(165);
+            get_ball(current_value);
+            turn_right(165);
+        }
+        while(i>1)
+        {
+          turn_right(5);
+          printf("%d\n",i);
+          fflush( stdout );
+
+          i--;
+        }
+        turn_right(6);
+        if (flag_detected){
+            throw();
         }
     }
 }
+
+/*
+void search_ball_right(void)
+{
+    int i;
+    float current_value, previous_value;
+    uint8_t sn_sonar;
+    int angle;
+    int prev_distance=10000;
+    int threshold = 50;
+    int flag_detected = 0;
+    printf("SONAR found, reading sonar. It will print 36 values \n");
+    if (ev3_search_sensor(LEGO_EV3_US, &sn_sonar,0)){
+        if ( !get_sensor_value0(sn_sonar, &previous_value )) {
+            previous_value = 0;
+        }
+        for(i=0; i < 36; i++)
+        {
+          turn_right(5);
+          angle = i*5;
+          if ( !get_sensor_value0(sn_sonar, &current_value )) {
+            current_value = 0;
+          }
+          printf( "\r%d : current value %f, previous value %f \n", angle, current_value,previous_value);
+          if ((previous_value - current_value > threshold) && (previous_value < 500)) {
+              printf("Ball detected\n");
+              fflush( stdout );
+              Sleep(5000);
+              break;
+              flag_detected = 1;
+          }
+          if ((current_value - previous_value > threshold) && (previous_value < 500)) {
+              printf("Ball missed but then detected\n");
+              fflush( stdout );
+              turn_left(5);
+              Sleep(5000);
+              flag_detected = 1;
+              break;
+          }
+
+          previous_value = current_value;
+          fflush( stdout );
+        }
+        if (flag_detected){
+          turn_right(6);
+          turn_right(162);
+          get_ball(current_value);
+          turn_left(162);
+        }
+        while(i>0)
+        {
+          turn_left(5);
+          i--;
+        }
+        turn_left(5);
+        if (flag_detected){
+            throw();
+        }
+}*/
