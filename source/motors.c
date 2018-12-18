@@ -276,10 +276,10 @@ void search_ball(void)
         turn_left(6);
         turn_left(162);
         disable_catapult();
-        move_forward(current_value/10 + 7);
+        move_forward(current_value/10 + 10);
         enable_catapult();
         get_ball();
-        move_backward(current_value/10 +7);
+        move_backward(current_value/10 +10);
         turn_right(162);
         while(i>0)
         {
