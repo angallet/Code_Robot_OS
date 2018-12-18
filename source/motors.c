@@ -270,7 +270,6 @@ void search_ball(void)
               Sleep(5000);
               break;
           }
-          }
           previous_value = current_value;
           fflush( stdout );
         }
