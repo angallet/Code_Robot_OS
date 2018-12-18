@@ -298,3 +298,67 @@ void search_ball(void)
         }
     }
 }
+
+
+void search_ball_left(void)
+{
+    int i;
+    float current_value, previous_value;
+    uint8_t sn_sonar;
+    int angle;
+    int prev_distance=10000;
+    int threshold = 50;
+    int flag_detected = 0;
+    printf("SONAR found, reading sonar. It will print 36 values \n");
+    if (ev3_search_sensor(LEGO_EV3_US, &sn_sonar,0)){
+        if ( !get_sensor_value0(sn_sonar, &previous_value )) {
+            previous_value = 0;
+        }
+        for(i=0; i < 36; i++)
+        {
+          turn_right(5);
+          angle = i*5;
+          if ( !get_sensor_value0(sn_sonar, &current_value )) {
+            current_value = 0;
+          }
+          printf( "\r%d : current value %f, previous value %f \n", angle, current_value,previous_value);
+          if ((previous_value - current_value) > threshold) && (current_value < 500)) {
+              printf("Ball detected\n");
+              fflush( stdout );
+              Sleep(5000);
+              break;
+              flag_detected = 1;
+          }
+          if ((current_value - previous_value) > threshold) && (current_value < 500)) {
+              printf("Ball missed but then detected\n");
+              fflush( stdout );
+              turn_left(5);
+              Sleep(5000);
+              flag_detected = 1;
+              break;
+          }
+          }
+          previous_value = current_value;
+          fflush( stdout );
+        }
+        if (flag_detected){
+            turn_right(5);
+            turn_right(162);
+            disable_catapult();
+            move_forward(current_value/10 + 5);
+            enable_catapult();
+            get_ball();
+            move_backward(current_value/10 +5);
+            turn_left(162);
+        }
+        while(i>0)
+        {
+          turn_left(5);
+          i--;
+        }
+        turn_left(5);
+        if (flag_detected){
+            throw();
+        }
+    }
+}
