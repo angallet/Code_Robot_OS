@@ -64,6 +64,38 @@ void move_backward (int distance)
   Sleep(time);
 }
 
+void turn_gyro_right(int degree)
+{
+  uint8_t sn_gyro;
+  uint_8 sn_motorA;
+  uint_8 sn_motorB;
+  int port_gyro = 50;
+  int port_motorA = 65;
+  int port_motorD = 68;
+  int angle;
+  int og_angle
+  if ( ev3_search_sensor( LEGO_EV3_GYRO, &sn_color, 0 ) &&
+  ev3_search_tacho_plugged_in(port_motorA,0, &sn_motorA, 0 ) &&
+  ev3_search_tacho_plugged_in(port_motorA,0, &sn_motorA, 0 ))
+  {
+    set_tacho_stop_action_inx( sn_motorA, TACHO_COAST );
+    set_tacho_stop_action_inx( sn_motorB, TACHO_COAST );
+    if ( !get_sensor_value0(sn_gyro, &og_angle )) {
+      og_angle=0;
+    }
+    while (angle-og_angle <= degree)
+    {
+      printf("og_angle = %d, angle = %d, diff = %d\n", og_angle, angle, angle-og_angle);
+      fflush();
+      get_sensor_value(sn_gyro, &angle);
+      set_tacho_speed_sp( sn_motorA, -30);
+      set_tacho_time_sp(sn_motorB, 30);
+      set_tacho_command_inx( sn_motorA, TACHO_RUN_FOREVER );
+      set_tacho_command_inx( sn_motorB, TACHO_RUN_FOREVER );
+    }
+    set_tacho_stop_action_inx( sn_motorA, TACHO_COAST );
+    set_tacho_stop_action_inx( sn_motorB, TACHO_COAST );
+}
 
 void turn_left (int degree)
 {
