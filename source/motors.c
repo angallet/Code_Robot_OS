@@ -266,20 +266,20 @@ void search_ball(void)
           if ((current_value - previous_value > threshold) && (current_value < 500)) {
               printf("Ball missed but then detected\n");
               fflush( stdout );
-              turn_right(5);
+              turn_right(6);
               Sleep(5000);
               break;
           }
           previous_value = current_value;
           fflush( stdout );
         }
-        turn_left(5);
+        turn_left(6);
         turn_left(162);
         disable_catapult();
-        move_forward(current_value/10 + 5);
+        move_forward(current_value/10 + 7);
         enable_catapult();
         get_ball();
-        move_backward(current_value/10 +5);
+        move_backward(current_value/10 +7);
         turn_right(162);
         while(i>0)
         {
