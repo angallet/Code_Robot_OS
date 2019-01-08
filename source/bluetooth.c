@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <pthread.h>
 #include <unistd.h>
+#include "bluetooth.h"
 #include <stdarg.h>
 #include <time.h>
 #include <sys/socket.h>
@@ -8,26 +10,33 @@
 #include <bluetooth/bluetooth.h>
 #include <bluetooth/rfcomm.h>
 
-#include "bluetooth.h"
 
 
+
+#define Sleep( msec ) usleep(( msec ) * 1000 )
+
+
+#define SERV_ADDR       "3C:A0:67:9C:64:BC"  /* Whatever the address of the server is */
+#define TEAM_ID     1                       /* Your team ID */
+#define SERVER_TEAM_ID          0xFF
 #define MSG_ACK     0
 #define MSG_START    1
 #define MSG_STOP   2
 #define MSG_KICK    3
 #define MSG_SCORE 	    4
-#define MESSAGE_MAX_LENGHT 	    58
-#define RES_SCORE 3
+#define MSG_CUSTOM 	    8
+#define MESSAGE_MAX_LENGHT 58
 
-#define Sleep( msec ) usleep(( msec ) * 1000 )
 
-int alive;
-int s;                                          // Bluetooth socket
+
+int s;
+uint16_t msgId = 0;                                         // Bluetooth socket
 enum BtState bluetooth_state = DISCONNECTED;    // State of connexion
-uint16_t msg_id = 0;                            // As msg_id++ is called before send, first message have id 1
-uint16_t ack_msg_id = 0;                        // Last acknowledged message (should be equal to msg_id)
+uint16_t ack_msg_id = 0;
 
-/*int read_from_server (int sock, char *buffer, size_t maxSize) {
+
+
+int read_from_server (int sock, char *buffer, size_t maxSize) {
   int bytes_read = read (sock, buffer, maxSize);
 
   if (bytes_read <= 0) {
@@ -39,57 +48,37 @@ uint16_t ack_msg_id = 0;                        // Last acknowledged message (sh
   printf ("[DEBUG] received %d bytes\n", bytes_read);
 
   return bytes_read;
-}*/
-
-
-
-
-void bluetooth_send_score(int score)
-{
-          char send_message[6];
-          msg_id++;
-          send_message[MSG_ID_LSB] = *((char *) &(msg_id));
-          send_message[MSG_ID_MSB] = *(((char *) &(msg_id))+1);
-          send_message[MSG_SRC] = TEAM_ID;
-          send_message[MSG_DST] = SERVER_TEAM_ID;
-          send_message[MSG_TYPE] = MSG_SCORE;
-          send_message[6]=RES_SCORE;
-
-          write(s, send_message, 9);
-
-
-}
-void start_received() {
-  printf("startreceived\n");
-}
-void stop_received() {
-  printf("stopreceived\n");
-}
-void kicked() {
-  printf("kickedreceived\n");
 }
 
 
 
-/**
- * Function called to init the connexion with the server.
- * Called on every connexion attempt
- * @return  1 if connected, 0 otherwise
- */
+void robotscore () {
+  char string[58];
+  srand(time(NULL));
+  /* Send 3 SCORE messages */
+  int i;
+    *((uint16_t *) string) = msgId++;
+    string[2] = TEAM_ID;
+    string[3] = 0xFF;
+    string[4] = MSG_SCORE;
+    string[5] = 3;          /* send a 3 points each time robot throw the ball */
+    write(s, string, 6);
+    Sleep( 1000 );
+
+}
+
+
 
 int init_bluetooth( void )
 {
         struct sockaddr_rc addr = { 0 };
         int status;
-        //struct timeval timeout;
-        //timeout.tv_sec = READ_TIMEOUT_SEC;
-        //timeout.tv_usec = 0;
+        int alive;
+
 
         // allocate a socket
         s = socket(AF_BLUETOOTH, SOCK_STREAM, BTPROTO_RFCOMM);
-        //setsockopt(s, SOL_SOCKET, SO_RCVTIMEO, (const char*)&timeout,sizeof(struct timeval));    // Set a timeout
 
-        // set the connection parameters (who to connect to)
         addr.rc_family = AF_BLUETOOTH;
         addr.rc_channel = (uint8_t) 1;
         str2ba(SERV_ADDR, &addr.rc_bdaddr);
@@ -105,66 +94,62 @@ int init_bluetooth( void )
         }
         bluetooth_state = CONNECTED;
         return ( 1 );
+        /* if connected */
+        if( status == 0 ) {
+          char string[58];
+
+          /* Wait for START message */
+          read_from_server (s, string, 9);
+          if (string[4] == MSG_START) {
+            printf ("Received start message!\n");
+            alive=1;
+          }
+
 }
-void bluetooth_close()
-{
-    bluetooth_state = DISCONNECTED;
-    shutdown(s, SHUT_RDWR);
 }
 
 
 
-void *bluetooth_main(void *arg) {
-        char receive_message[MESSAGE_MAX_LENGHT];
+void *mybluetooth(void *arg) {
+        char string[MESSAGE_MAX_LENGHT];
         uint16_t message_id;
+        int alive;
 
-        while (alive) {
-                while (alive && (bluetooth_state == DISCONNECTED)) {                  // If not connected, try to reconnect every
-                        sleep( RECONNEXION_PERIOD_SEC );
+
+                while (bluetooth_state == DISCONNECTED) {                  // If not connected, try to reconnect
                         init_bluetooth();
                 }
-                if (!alive) break;                                          // Quit faster
+                while( alive==1){
 
-                int bytes_read = read(s, receive_message, MESSAGE_MAX_LENGHT); // Block until a message is received
+                read_from_server (s, string, MESSAGE_MAX_LENGHT);; // Block until a message is received
 
-                if (bytes_read < 0) {                                       // Test if server is still alive
-                        printf("Server unexpectedly closed connection...");
-                        bluetooth_state = DISCONNECTED;
-                        close(s);
-                        continue;
-                }
-                if ( bytes_read == 0 ) continue;                    // Timeout
-                if ( bytes_read < 5 ) continue;                     // Bad format
-                if (receive_message[MSG_SRC] != SERVER_TEAM_ID) continue;  // Bad sender (to prevent from other robot attack)
-                if (receive_message[MSG_DST] != TEAM_ID) continue;  // Bad destination
+                if (string[2] == SERVER_TEAM_ID) continue;  // Bad sender (to prevent from other robot attack)
+                if (string[3] == TEAM_ID) continue;  // Bad destination
 
-                switch(receive_message[MSG_TYPE]) {
+                switch(string[4]) {
                 case MSG_ACK:
-                        message_id = receive_message[6] << 8 | receive_message[5];
+                        message_id = string[6] << 8 | string[5];
                         if (message_id < ack_msg_id)
                                 printf("Ack of an old message");
-                        if (message_id > msg_id)
+                        if (message_id > msgId)
                                 printf("Ack of a message not sent yet");
                         if (message_id > ack_msg_id + 1)
                                 printf("Message(s) lost (ack not received)");
-                        if (receive_message[7] != 0)
+                        if (string[7] != 0)
                                 printf("Message misunderstood by server");
                         ack_msg_id = message_id;
                         break;
-                case MSG_START:
-                        printf("Game start sent by server");
-                        start_received();
-                        break;
                 case MSG_STOP:
                         printf("Game stop sent by server");
-                        stop_received();
+                        alive=0;
                         break;
                 case MSG_KICK:
-                        printf("Defendum got kicked by server");
-                        kicked();
+                        printf("a robot got kicked by server");
+                        alive=0;
                         break;
                 }
         }
+
         close(s);
         bluetooth_state = DISCONNECTED;
         pthread_exit(NULL);

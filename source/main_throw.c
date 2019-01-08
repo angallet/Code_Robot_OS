@@ -122,9 +122,10 @@ int main( int argc, char **argv )
     //Run all sensors
     ev3_sensor_init();
     throw();
+    robot();
     Sleep( 5000 );
 
-      robot();
+
       close (s);
 
       sleep (5);
