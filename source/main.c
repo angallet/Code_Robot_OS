@@ -12,10 +12,9 @@ const char const *color[] = { "?", "BLACK", "BLUE", "GREEN", "YELLOW", "RED", "W
 #define COLOR_COUNT  (( int )( sizeof( color ) / sizeof( color[ 0 ])))
 
 static bool _check_pressed( uint8_t sn );
-
+int val;
 int main( void )
 {
-  int val;
   uint8_t sn_touch;
   float value;
   uint8_t sn_color;

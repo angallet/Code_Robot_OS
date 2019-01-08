@@ -40,6 +40,7 @@ void quarter_turn(void)
 //0.126m/s
 //12,6cm/s
 //distance in centimeter
+
 void move_forward (int distance)
 {
   uint8_t sn;
@@ -227,6 +228,8 @@ void enable_catapult(void)
 
 void get_ball(int move_value)
 {
+    printf( "%d this is the color\n", val);
+    fflush( stdout );
     int motor_lift = 66;
     printf("get_ball\n" );
     disable_catapult();
