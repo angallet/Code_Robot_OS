@@ -156,6 +156,18 @@ void throw (void)
   }
 }
 
+
+// function to perform the initial throw
+void initial_throw(void)
+{
+  // throw the first ball
+  throw();
+  // turn the inner motor, the motor which perform the action of lifting the ball
+  sg_motor(motor_lift,1000,-300);
+  // throw the second ball
+  throw();
+}
+
 // function to disable catapult
 void disable_catapult(void)
 {
