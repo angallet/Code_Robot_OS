@@ -56,16 +56,20 @@ $(BUILD_DIR_THROW):
 $(BUILD_DIR_THROW)/%.o: $(SOURCE_DIR)/%.c
 	$(CC) -c $(SOURCE_DIR)/$*.c $(INCLUDES) -o $(BUILD_DIR_THROW)/$*.o
 
+# this is use to run docker and compile code
 docker:
 	docker run --rm -it -h ev3 -v ~/OS_Rover_APA/:/src -w /src ev3cc /bin/bash
 
+# install the dependencies on the docker
 install-shared:
 	cd ev3dev-c/source/ev3/&&make&&sudo make install&&make shared&&sudo make shared-install
 
+# send the code on the robot
 send:
 	scp main robot@$(IP):
 
+# clean all the temporary files
 clean:
-	rm -rf *.o
-	rm ./main
-	rm ./main_throw
+	-rm -rf *.o
+	-rm ./main
+	-rm ./main_throw
