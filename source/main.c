@@ -42,12 +42,12 @@ int main( void )
         printf( "\r(%s) \n", color[ val ]);
         fflush( stdout );
       }
-      turn_gyro_right(45);
+        search_ball_right();
       // this is the core part of the main which defines routines
       if (activated){
         // throw the two ball initial ball already installed in the robot
         initial_throw();
-        search_ball();
+        search_ball_right();
       }
     }
 
