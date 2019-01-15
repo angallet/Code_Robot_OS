@@ -13,7 +13,7 @@ const char const *color[] = { "?", "BLACK", "BLUE", "GREEN", "YELLOW", "RED", "W
 
 static bool _check_pressed( uint8_t sn );
 int val;
-int activated;
+int activated = 0;
 int main( void )
 {
   uint8_t sn_touch;
@@ -42,6 +42,7 @@ int main( void )
         printf( "\r(%s) \n", color[ val ]);
         fflush( stdout );
       }
+      turn_gyro_right(45);
       // this is the core part of the main which defines routines
       if (activated){
         // throw the two ball initial ball already installed in the robot

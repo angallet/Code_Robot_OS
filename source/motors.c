@@ -5,6 +5,7 @@
 #include "ev3_tacho.h"
 #include "brick.h"
 #include "motors.h"
+#include "bluetooth.h"
 
 // WIN32 /////////////////////////////////////////
 #ifdef __WIN32__
@@ -62,16 +63,15 @@ void turn_gyro_right(int degree)
   float og_angle;
   if ( ev3_search_sensor( LEGO_EV3_GYRO, &sn_gyro, 0 ) &&
   ev3_search_tacho_plugged_in(port_motorA,0, &sn_motorA, 0 ) &&
-  ev3_search_tacho_plugged_in(port_motorA,0, &sn_motorA, 0 ))
+  ev3_search_tacho_plugged_in(port_motorD,0, &sn_motorB, 0 ))
   {
     set_tacho_stop_action_inx( sn_motorA, TACHO_COAST );
     set_tacho_stop_action_inx( sn_motorB, TACHO_COAST );
-    if ( !get_sensor_value0(sn_gyro, &og_angle )) {
-      og_angle=0;
-    }
-    while (angle-og_angle <= degree)
+    get_sensor_value0(sn_gyro, &angle )
+    og_angle=angle % 360;
+    while (abs(angle%360-og_angle) <= degree)
     {
-      printf("og_angle = %d, angle = %d, diff = %d\n", og_angle, angle, angle-og_angle);
+      printf("og_angle = %d, angle = %d, diff = %d\n", og_angle, angle%360, angle%360-og_angle);
       fflush(stdout);
       get_sensor_value0(sn_gyro, &angle);
       set_tacho_speed_sp( sn_motorA, -30);
@@ -153,6 +153,8 @@ void throw (void)
     set_tacho_position_sp(sn, -30);
     set_tacho_command_inx(sn, TACHO_RUN_TO_REL_POS);
     set_tacho_stop_action_inx( sn, TACHO_COAST );
+//TO DO : decomment only after the merge with bluetooth
+//    robotscore();
   }
 }
 
