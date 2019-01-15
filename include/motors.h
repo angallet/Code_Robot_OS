@@ -9,6 +9,6 @@ void get_ball(int move_value);
 void turn (int degree);
 void search_ball(void);
 void move_backward (int distance);
-void turn_gyro_right(int degree);
+void turn_gyro_right(float degree);
 extern int val;
 //void search_ball_right(void);

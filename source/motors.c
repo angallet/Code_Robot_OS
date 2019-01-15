@@ -51,7 +51,7 @@ void move_backward (int distance)
 }
 
 // function to turn right using the gyroscope
-void turn_gyro_right(int degree)
+void turn_gyro_right(float degree)
 {
   uint8_t sn_gyro;
   uint8_t sn_motorA;
@@ -59,8 +59,8 @@ void turn_gyro_right(int degree)
   int port_gyro = 50;
   int port_motorA = 65;
   int port_motorD = 68;
-  int angle;
-  int og_angle;
+  float angle;
+  float og_angle;
   if ( ev3_search_sensor( LEGO_EV3_GYRO, &sn_gyro, 0 ) &&
   ev3_search_tacho_plugged_in(port_motorA,0, &sn_motorA, 0 ) &&
   ev3_search_tacho_plugged_in(port_motorD,0, &sn_motorB, 0 ))
