@@ -68,10 +68,10 @@ void turn_gyro_right(int degree)
     set_tacho_stop_action_inx( sn_motorA, TACHO_COAST );
     set_tacho_stop_action_inx( sn_motorB, TACHO_COAST );
     get_sensor_value0(sn_gyro, &angle )
-    og_angle=angle % 360;
-    while (abs(angle%360-og_angle) <= degree)
+    og_angle=int(angle % 360);
+    while (abs(int(angle%360)-og_angle) <= degree)
     {
-      printf("og_angle = %d, angle = %d, diff = %d\n", og_angle, angle%360, angle%360-og_angle);
+      printf("og_angle = %d, angle = %d, diff = %d\n", og_angle, int(angle%360), int(angle%360)-og_angle);
       fflush(stdout);
       get_sensor_value0(sn_gyro, &angle);
       set_tacho_speed_sp( sn_motorA, -30);
