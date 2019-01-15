@@ -160,6 +160,7 @@ void throw (void)
 // function to perform the initial throw
 void initial_throw(void)
 {
+  int motor_lift = 66;
   // throw the first ball
   throw();
   // turn the inner motor, the motor which perform the action of lifting the ball
