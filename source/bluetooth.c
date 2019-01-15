@@ -64,6 +64,7 @@ void robotscore () {
     string[5] = 3;          /* send a 3 points each time robot throw the ball */
     write(s, string, 6);
     Sleep( 1000 );
+    ack_msg_id = msgId;
 
 }
 
@@ -73,7 +74,7 @@ int init_bluetooth( void )
 {
         struct sockaddr_rc addr = { 0 };
         int status;
-        int alive;
+        int activated;
 
 
         // allocate a socket
@@ -102,7 +103,7 @@ int init_bluetooth( void )
           read_from_server (s, string, 9);
           if (string[4] == MSG_START) {
             printf ("Received start message!\n");
-            alive=1;
+            activated=1;
           }
 
 }
@@ -113,13 +114,12 @@ int init_bluetooth( void )
 void *mybluetooth(void *arg) {
         char string[MESSAGE_MAX_LENGHT];
         uint16_t message_id;
-        int alive;
 
 
                 while (bluetooth_state == DISCONNECTED) {                  // If not connected, try to reconnect
                         init_bluetooth();
                 }
-                while( alive==1){
+                while( activated==1){
 
                 read_from_server (s, string, MESSAGE_MAX_LENGHT);; // Block until a message is received
 
@@ -127,25 +127,23 @@ void *mybluetooth(void *arg) {
                 if (string[3] == TEAM_ID) continue;  // Bad destination
 
                 switch(string[4]) {
-                case MSG_ACK:
+                /*case MSG_ACK:
                         message_id = string[6] << 8 | string[5];
-                        if (message_id < ack_msg_id)
-                                printf("Ack of an old message");
-                        if (message_id > msgId)
-                                printf("Ack of a message not sent yet");
-                        if (message_id > ack_msg_id + 1)
-                                printf("Message(s) lost (ack not received)");
+                        if (message_id != ack_msg_id)
+                                printf("not the right ack");
+                                robotscore();
                         if (string[7] != 0)
-                                printf("Message misunderstood by server");
+                                printf("error with server");
+                                robotscore();
                         ack_msg_id = message_id;
-                        break;
+                        break;*/
                 case MSG_STOP:
                         printf("Game stop sent by server");
-                        alive=0;
+                        activated=0;
                         break;
                 case MSG_KICK:
                         printf("a robot got kicked by server");
-                        alive=0;
+                        activated=0;
                         break;
                 }
         }

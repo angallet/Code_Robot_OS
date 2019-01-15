@@ -26,12 +26,12 @@ int main( void )
   int i;
   char s[ 256 ];
   uint32_t n, ii;
-  /*pthread_t thread_id;
+  pthread_t thread_id;
     printf("create Thread\n");
     pthread_create(&thread_id, NULL, bluetooth_main, NULL);
     pthread_join(thread_id, NULL);
-    printf(" Thread done \n");*/
-    mybluetooth(NULL);
+    printf(" Thread done \n");
+
 
     if ( ev3_init() == -1 ) return ( 1 );
     while ( ev3_tacho_init() < 1 ) Sleep( 1000 );

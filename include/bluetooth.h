@@ -1,7 +1,7 @@
 #ifndef BLUETOOTH_H
 #define BLUETOOTH_H
 
-extern int alive;
+extern int activated;
 
 
 // State
