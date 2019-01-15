@@ -59,19 +59,19 @@ void turn_gyro_right(int degree)
   int port_gyro = 50;
   int port_motorA = 65;
   int port_motorD = 68;
-  float angle;
-  float og_angle;
+  int angle;
+  int og_angle;
   if ( ev3_search_sensor( LEGO_EV3_GYRO, &sn_gyro, 0 ) &&
   ev3_search_tacho_plugged_in(port_motorA,0, &sn_motorA, 0 ) &&
   ev3_search_tacho_plugged_in(port_motorD,0, &sn_motorB, 0 ))
   {
     set_tacho_stop_action_inx( sn_motorA, TACHO_COAST );
     set_tacho_stop_action_inx( sn_motorB, TACHO_COAST );
-    get_sensor_value0(sn_gyro, &angle )
-    og_angle=int(angle % 360);
-    while (abs(int(angle%360)-og_angle) <= degree)
+    get_sensor_value0(sn_gyro, &angle );
+    og_angle=angle % 360;
+    while (abs(angle%360-og_angle) <= degree)
     {
-      printf("og_angle = %d, angle = %d, diff = %d\n", og_angle, int(angle%360), int(angle%360)-og_angle);
+      printf("og_angle = %d, angle = %d, diff = %d\n", og_angle, angle%360, angle%360-og_angle);
       fflush(stdout);
       get_sensor_value0(sn_gyro, &angle);
       set_tacho_speed_sp( sn_motorA, -30);
