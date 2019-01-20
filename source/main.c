@@ -27,7 +27,7 @@ int main( void )
   uint32_t n, ii;
   pthread_t thread_id;
     printf("create Thread\n");
-    pthread_create(&thread_id, NULL, bluetooth_main, NULL);
+    pthread_create(&thread_id, NULL, mybluetooth, NULL);
     pthread_join(thread_id, NULL);
     printf(" Thread done \n");
 
