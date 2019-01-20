@@ -216,8 +216,7 @@ void throw (void)
     set_tacho_command_inx(sn, TACHO_RUN_TO_REL_POS);
     Sleep(500);
     set_tacho_stop_action_inx( sn, TACHO_COAST );
-//TO DO : decomment only after the merge with bluetooth
-//    robotscore();
+    robotscore();
   }
 }
 
