@@ -74,6 +74,10 @@ install-shared:
 send:
 	scp main robot@$(IP):
 
+# connect on the robot
+connect:
+	ssh robot@$(IP):
+
 # clean all the temporary files
 clean:
 	-rm -rf *.o
