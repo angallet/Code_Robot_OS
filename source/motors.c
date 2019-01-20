@@ -396,7 +396,7 @@ void search_ball_right(void)
         // the robot will rotate and search for the ball accordingly to the protocol define below
         for(i=0; i < 18; i++)
         {
-          turn_gyro_left(5);
+          turn_gyro_right(5);
           angle = i*5;
           // get the value of the sonar sensor
           if ( !get_sensor_value0(sn_sonar, &current_value )) {
@@ -417,7 +417,7 @@ void search_ball_right(void)
           }
           if ((current_value - previous_value > threshold) && (previous_value < 500)) {
               printf("Ball missed but then detected\n");
-              turn_gyro_right(10);
+              turn_gyro_left(10);
               Sleep(5000);
               flag_detected = 1;
               printf("%d\n",i);
@@ -432,18 +432,18 @@ void search_ball_right(void)
         // if the ball is detected it perform a turn
         if (flag_detected){
 
-            turn_gyro_left(6);
-            turn_gyro_left(180);
+            turn_gyro_right(6);
+            turn_gyro_right(180);
           
             get_ball(current_value);
             
-            turn_gyro_right(180);
+            turn_gyro_left(180);
         }
 
         // get back to the initial angle
-        if (i>0) turn_gyro_right(5*i);
+        if (i>0) turn_gyro_left(5*i);
 
-        turn_gyro_right(6);
+        turn_gyro_left(6);
         // if the ball is detected then it throw the ball
         if (flag_detected){
             throw();
