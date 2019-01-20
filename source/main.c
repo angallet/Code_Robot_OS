@@ -49,7 +49,7 @@ int main( void )
         printf( "\r(%s) \n", color[ val ]);
         fflush( stdout );
       }
-        search_ball_right();
+        //search_ball_right();
       // this is the core part of the main which defines routines
       if (activated){
         // throw the two ball initial ball already installed in the robot
