@@ -23,12 +23,18 @@ IP        ?= 192.168.137.3# the IP can be override by the user with the use of a
 OBJS = \
 	$(BUILD_DIR)/main.o \
 	$(BUILD_DIR)/motors.o \
+	$(BUILD_DIR)/bluetooth.o \
 
 OBJS_THROW = \
 	$(BUILD_DIR)/main_throw.o \
 	$(BUILD_DIR)/motors.o \
 
 all: main
+
+
+
+
+
 
 main: ${OBJS}
 	$(CC) $(INCLUDES) $(CFLAGS) $(OBJS) $(LDFLAGS) -o main

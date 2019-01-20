@@ -6,14 +6,20 @@
 #include "ev3_tacho.h"
 #include "ev3_sensor.h"
 #include "motors.h"
-
+#include <pthread.h>
+#include "bluetooth.h"
 #define Sleep( msec ) usleep(( msec ) * 1000 )
 const char const *color[] = { "?", "BLACK", "BLUE", "GREEN", "YELLOW", "RED", "WHITE", "BROWN" };
 #define COLOR_COUNT  (( int )( sizeof( color ) / sizeof( color[ 0 ])))
 
 static bool _check_pressed( uint8_t sn );
+<<<<<<< HEAD
 int val;
 int activated = 0;
+=======
+
+
+>>>>>>> bluetooth
 int main( void )
 {
   uint8_t sn_touch;
@@ -24,6 +30,12 @@ int main( void )
   int i;
   char s[ 256 ];
   uint32_t n, ii;
+  pthread_t thread_id;
+    printf("create Thread\n");
+    pthread_create(&thread_id, NULL, bluetooth_main, NULL);
+    pthread_join(thread_id, NULL);
+    printf(" Thread done \n");
+
 
     if ( ev3_init() == -1 ) return ( 1 );
     while ( ev3_tacho_init() < 1 ) Sleep( 1000 );
