@@ -216,8 +216,7 @@ void throw (void)
     set_tacho_command_inx(sn, TACHO_RUN_TO_REL_POS);
     Sleep(500);
     set_tacho_stop_action_inx( sn, TACHO_COAST );
-//TO DO : decomment only after the merge with bluetooth
-//    robotscore();
+    robotscore();
   }
 }
 
@@ -289,6 +288,40 @@ void get_ball(int move_value)
     move_backward(move_value/10 + 8);
 }
 
+
+// function to get the ball
+void get_ball(int move_value, int *flag_ball_caught)
+{
+    int old_val = val;
+
+    printf( "%d this is the color\n", val);
+    fflush( stdout );
+    printf("get_ball\n" );
+
+    disable_catapult();
+
+    move_forward(move_value/10 + 8);
+
+    enable_catapult();
+    Sleep(500);
+    // turn the inner motor, the motor which perform the action of lifting the ball
+    sg_motor(MOTOR_LIFT,1000,-300);
+    if ( ev3_search_sensor( LEGO_EV3_COLOR, &sn_color, 0 )) {
+        printf( "COLOR sensor is found, reading COLOR...\n" );
+        if ( !get_sensor_value( 0, sn_color, &val ) || ( val < 0 ) || ( val >= COLOR_COUNT )) {
+          val = 0;
+        }
+        printf( "\r(%s) \n", color[ val ]);
+        fflush( stdout );
+      }
+    if (val != old_val) {
+        *flag_ball_caught = 1;
+    }
+    Sleep(3000);
+
+    move_backward(move_value/10 + 8);
+}
+
 // function to search the ball 
 void search_ball_left(void)
 {
@@ -299,7 +332,6 @@ void search_ball_left(void)
     int prev_distance=10000;
     int threshold = 50;
     int flag_detected = 0;
-
     printf("SONAR found, reading sonar. It will print 36 values \n");
     if (ev3_search_sensor(LEGO_EV3_US, &sn_sonar,0)){
         if ( !get_sensor_value0(sn_sonar, &previous_value )) {
