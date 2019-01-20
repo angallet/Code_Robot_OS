@@ -6,7 +6,7 @@ void init_motors(void);
 void quarter_turn (void);
 void throw (void);
 void get_ball(int move_value);
-void get_ball(int move_value, int flag_ball_caught);
+void get_ball22(int move_value, int *flag_ball_caught);
 void turn (int degree);
 void search_ball_left(void);
 void search_ball_right(void);

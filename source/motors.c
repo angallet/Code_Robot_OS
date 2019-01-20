@@ -290,10 +290,10 @@ void get_ball(int move_value)
 
 
 // function to get the ball
-void get_ball(int move_value, int *flag_ball_caught)
+void get_ball22(int move_value, int *flag_ball_caught)
 {
     int old_val = val;
-
+      uint8_t sn_color;
     printf( "%d this is the color\n", val);
     fflush( stdout );
     printf("get_ball\n" );
@@ -308,10 +308,10 @@ void get_ball(int move_value, int *flag_ball_caught)
     sg_motor(MOTOR_LIFT,1000,-300);
     if ( ev3_search_sensor( LEGO_EV3_COLOR, &sn_color, 0 )) {
         printf( "COLOR sensor is found, reading COLOR...\n" );
-        if ( !get_sensor_value( 0, sn_color, &val ) || ( val < 0 ) || ( val >= COLOR_COUNT )) {
+        if ( !get_sensor_value( 0, sn_color, &val ) || ( val < 0 )) {
           val = 0;
         }
-        printf( "\r(%s) \n", color[ val ]);
+        printf( "\r(%d) \n",val );
         fflush( stdout );
       }
     if (val != old_val) {
