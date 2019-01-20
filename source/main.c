@@ -27,7 +27,7 @@ int main( void )
   uint32_t n, ii;
   pthread_t thread_id;
     printf("create Thread\n");
-    pthread_create(&thread_id, NULL, bluetooth_main, NULL);
+    pthread_create(&thread_id, NULL, mybluetooth, NULL);
     pthread_join(thread_id, NULL);
     printf(" Thread done \n");
 
@@ -49,7 +49,7 @@ int main( void )
         printf( "\r(%s) \n", color[ val ]);
         fflush( stdout );
       }
-        search_ball_right();
+        //search_ball_right();
       // this is the core part of the main which defines routines
       if (activated){
         // throw the two ball initial ball already installed in the robot
