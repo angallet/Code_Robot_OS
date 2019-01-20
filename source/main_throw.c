@@ -79,10 +79,10 @@ void robot () {
 }
 
 
-
+int val;
 int main( int argc, char **argv )
 {
-  int val;
+
   uint8_t sn_touch;
   float value;
   uint8_t sn_color;
