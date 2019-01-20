@@ -22,17 +22,21 @@
 //////////////////////////////////////////////////
 #endif
 
+#define MOTOR_A 65
+#define MOTOR_B 68
+#define MOTOR_LIFT 66
+#define MOTOR_CATAPULT 67
+
+
 // function to move forward a set distance given by the parameters distance
 void move_forward (int distance)
 {
   uint8_t sn;
-  int port=65;
   // computation of the time necessary to move of the corresponding distance
   int time= (int)(distance/12.6)*1000;
   printf("the robot will run during : %d\n",time);
-  sg_motor(port, time, SPEED);
-  port=68;
-  sg_motor(port, time, SPEED);
+  sg_motor(MOTOR_A, time, SPEED);
+  sg_motor(MOTOR_B, time, SPEED);
   Sleep(time);
 }
 
@@ -40,13 +44,11 @@ void move_forward (int distance)
 void move_backward (int distance)
 {
   uint8_t sn;
-  int port=65;
   // computation of the time necessary to move of the corresponding distance
   int time= (int)(distance/12.6)*1000;
   printf("the robot will run during : %d\n",time);
-  sg_motor(port, time, -SPEED);
-  port=68;
-  sg_motor(port, time, -SPEED);
+  sg_motor(MOTOR_A, time, -SPEED);
+  sg_motor(MOTOR_B, time, -SPEED);
   Sleep(time);
 }
 
@@ -57,8 +59,6 @@ void turn_gyro_right(int degree)
   uint8_t sn_motorA;
   uint8_t sn_motorB;
   int port_gyro = 50;
-  int port_motorA = 65;
-  int port_motorD = 68;
   float angle;
   int og_angle;
   int max_iter = 50;
@@ -66,8 +66,8 @@ void turn_gyro_right(int degree)
   int counter = 0;
   printf("Enter the function turn_gyro_right, degree = %d\n",degree);
   if ( ev3_search_sensor( LEGO_EV3_GYRO, &sn_gyro, 0 ) &&
-  ev3_search_tacho_plugged_in(port_motorA,0, &sn_motorA, 0 ) &&
-  ev3_search_tacho_plugged_in(port_motorD,0, &sn_motorB, 0 ))
+  ev3_search_tacho_plugged_in(MOTOR_A,0, &sn_motorA, 0 ) &&
+  ev3_search_tacho_plugged_in(MOTOR_B,0, &sn_motorB, 0 ))
   {
     set_tacho_stop_action_inx( sn_motorA, TACHO_COAST );
     set_tacho_stop_action_inx( sn_motorB, TACHO_COAST );
@@ -109,8 +109,6 @@ void turn_gyro_left(int degree)
   uint8_t sn_motorA;
   uint8_t sn_motorB;
   int port_gyro = 50;
-  int port_motorA = 65;
-  int port_motorD = 68;
   float angle;
   int og_angle;
   int max_iter = 50;
@@ -118,8 +116,8 @@ void turn_gyro_left(int degree)
   int counter = 0;
   printf("Enter the function turn_gyro_right, degree = %d\n",degree);
   if ( ev3_search_sensor( LEGO_EV3_GYRO, &sn_gyro, 0 ) &&
-  ev3_search_tacho_plugged_in(port_motorA,0, &sn_motorA, 0 ) &&
-  ev3_search_tacho_plugged_in(port_motorD,0, &sn_motorB, 0 ))
+  ev3_search_tacho_plugged_in(MOTOR_A,0, &sn_motorA, 0 ) &&
+  ev3_search_tacho_plugged_in(MOTOR_B,0, &sn_motorB, 0 ))
   {
     set_tacho_stop_action_inx( sn_motorA, TACHO_COAST );
     set_tacho_stop_action_inx( sn_motorB, TACHO_COAST );
@@ -160,12 +158,10 @@ void turn_left (int degree)
 {
       //printf("enter into the function turn\n");
       uint8_t sn;
-      int port=65;
       int time;
       time = 60*degree; // 540/180 : 540 time  3 factor
-      sg_motor(port, time, 30);
-      port=68;
-      sg_motor(port, time, -30);
+      sg_motor(MOTOR_A, time, 30);
+      sg_motor(MOTOR_B, time, -30);
       Sleep(time);
 }
 
@@ -174,12 +170,10 @@ void turn_right (int degree)
 {
       //printf("enter into the function turn\n");
       uint8_t sn;
-      int port=65;
       int time;
       time = 60*degree; // 540/180 : 540 time  3 factor
-      sg_motor(port, time, -30);
-      port=68;
-      sg_motor(port, time, 30);
+      sg_motor(MOTOR_A, time, -30);
+      sg_motor(MOTOR_B, time, 30);
       Sleep(time);
 }
 
@@ -200,18 +194,15 @@ void sg_motor (int port, int time, int speed)
 void quarter_turn (void)
 {
   uint8_t sn;
-  int port=65;
-  sg_motor(port, 540, 300);
-  port=68;
-  sg_motor(port, 540, -300);
+  sg_motor(MOTOR_A, 540, 300);
+  sg_motor(MOTOR_B, 540, -300);
 }
 
 // function to permform a 3 point throw
 void throw (void)
 {
   uint8_t sn;
-  int port=67;
-  if ( ev3_search_tacho_plugged_in(port,0, &sn, 0 )) {
+  if ( ev3_search_tacho_plugged_in(MOTOR_CATAPULT,0, &sn, 0 )) {
     // set the position
     set_tacho_position_sp(sn, 140);
     // set the speed
@@ -234,11 +225,10 @@ void throw (void)
 // function to perform the initial throw
 void initial_throw(void)
 {
-  int motor_lift = 66;
   // throw the first ball
   throw();
   // turn the inner motor, the motor which perform the action of lifting the ball
-  sg_motor(motor_lift,1000,-300);
+  sg_motor(MOTOR_LIFT ,1000,-300);
   Sleep(500);
   // throw the second ball
 
@@ -249,8 +239,7 @@ void initial_throw(void)
 void disable_catapult(void)
 {
     uint8_t sn;
-    int port=67;
-    if ( ev3_search_tacho_plugged_in(port,0, &sn, 0 )) {
+    if ( ev3_search_tacho_plugged_in(MOTOR_CATAPULT,0, &sn, 0 )) {
       printf("disable_catapult\n");
 
       set_tacho_position_sp(sn, 140);
@@ -265,8 +254,7 @@ void disable_catapult(void)
 void enable_catapult(void)
 {
     uint8_t sn;
-    int port=67;
-    if ( ev3_search_tacho_plugged_in(port,0, &sn, 0 )) {
+    if ( ev3_search_tacho_plugged_in(MOTOR_CATAPULT,0, &sn, 0 )) {
         printf("enable_catapult\n" );
 
       set_tacho_position_sp(sn, -140);
@@ -283,8 +271,6 @@ void enable_catapult(void)
 // function to get the ball
 void get_ball(int move_value)
 {
-    int motor_lift = 66;
-
     printf( "%d this is the color\n", val);
     fflush( stdout );
     printf("get_ball\n" );
@@ -296,7 +282,7 @@ void get_ball(int move_value)
     enable_catapult();
     Sleep(500);
     // turn the inner motor, the motor which perform the action of lifting the ball
-    sg_motor(motor_lift,1000,-300);
+    sg_motor(MOTOR_LIFT,1000,-300);
 
     Sleep(3000);
 
