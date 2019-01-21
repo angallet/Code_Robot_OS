@@ -27,7 +27,7 @@
 #define MOTOR_LIFT 66
 #define MOTOR_CATAPULT 67
 //const char const *color[] = { "?", "BLACK", "BLUE", "GREEN", "YELLOW", "RED", "WHITE", "BROWN" };
-
+#define min( a, b ) ( ((a) < (b)) ? (a) : (b) )
 
 // function to move forward a set distance given by the parameters distance
 void move_forward (int distance)
@@ -152,6 +152,46 @@ void turn_gyro_left(int degree)
   }
 }
 
+// function to turn left on one wheel using the gyroscope
+void turn_gyro_left_1(int degree)
+{
+  uint8_t sn_gyro;
+  uint8_t sn_motorB;
+  int port_gyro = 50;
+  float angle;
+  int og_angle;
+  int max_iter = 50;
+  int current_diff = 0;
+  int counter = 0;
+  printf("Enter the function turn_gyro_right, degree = %d\n",degree);
+  if ( ev3_search_sensor( LEGO_EV3_GYRO, &sn_gyro, 0 ) &&
+  ev3_search_tacho_plugged_in(MOTOR_B,0, &sn_motorB, 0 ))
+  {
+    set_tacho_stop_action_inx( sn_motorB, TACHO_COAST );
+    get_sensor_value0(sn_gyro, &angle );
+    og_angle= (int) angle % 360;
+    set_tacho_speed_sp( sn_motorB, 60);
+    set_tacho_command_inx( sn_motorB, TACHO_RUN_FOREVER );
+ 
+    while (abs((int)angle%360-og_angle) < degree)
+    {
+      printf("og_angle = %d, angle = %d, diff = %d , counter = %d\n", og_angle,(int) angle%360, (int)angle%360-og_angle, counter);
+      fflush(stdout);
+      if (current_diff == (int)angle%360-og_angle) counter ++;
+      else{
+	counter = 0;
+	current_diff = (int)angle%360-og_angle;
+      }
+      if (counter == max_iter) break;
+      get_sensor_value0(sn_gyro, &angle);
+     }
+    printf("After the while");
+    fflush(stdout);
+    set_tacho_speed_sp( sn_motorB, 0);
+    set_tacho_command_inx( sn_motorB, TACHO_RUN_FOREVER );
+    set_tacho_stop_action_inx( sn_motorB, TACHO_COAST );
+  }
+}
 // function to turn left using the gyroscope
 void turn_gyro_left2(int degree)
 {
@@ -327,13 +367,13 @@ void get_ball(int move_value, int *flag_ball_caught)
     printf("Enter in the function getball22\n");
     disable_catapult();
 
-    move_forward(move_value/10 + 8);
+    move_forward(move_value);
 
     Sleep(500);
     catch_ball(flag_ball_caught);
     Sleep(500);
 
-    move_backward(move_value/10 + 8);
+    move_backward(move_value);
     enable_catapult();
     sg_motor(MOTOR_LIFT,390,-300);
 }
@@ -361,7 +401,7 @@ void catch_ball(int *flag_ball_caught)
 
 
 // function to search the ball 
-void search_ball_left(void)
+void search_ball_left(int distance_max)
 {
     int i;
     float current_value, previous_value;
@@ -417,8 +457,8 @@ void search_ball_left(void)
 
             turn_gyro_left(6);
             turn_gyro_left(180);
-          
-            get_ball(current_value,&flag_ball_caught);
+	    
+            get_ball(min(current_value/10 + 8, distance_max),&flag_ball_caught);
             
             turn_gyro_right(180);
         }
@@ -435,7 +475,7 @@ void search_ball_left(void)
 }
 
 // function to search the ball 
-void search_ball_right(void)
+void search_ball_right(int distance_max)
 {
     int i;
     float current_value, previous_value;
@@ -492,7 +532,7 @@ void search_ball_right(void)
             turn_gyro_right(6);
             turn_gyro_right(180);
           
-            get_ball(current_value,&flag_ball_caught);
+            get_ball(min(current_value/10 + 8, distance_max),&flag_ball_caught);
             
             turn_gyro_left(180);
         }

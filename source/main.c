@@ -48,14 +48,16 @@ int main( void )
         printf( "\r(%s) \n", color[ val ]);
         fflush( stdout );
       }
-      turn_gyro_left(45);
       Sleep(6000);
       // this is the core part of the main which defines routines
-      //move_forward(100);
+        search_ball_right(50);
       if (activated){
         // throw the two ball initial ball already installed in the robot
         //initial_throw();
         //search_ball_right();
+        //search_ball_left();
+        //search_ball_right();
+        //search_ball_left();
       }
     }
 
