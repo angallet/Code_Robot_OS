@@ -38,7 +38,7 @@ int main( void )
     //Run all sensors
     ev3_sensor_init();
 
-    for ( ; ; ){
+
       // search the color
       if ( ev3_search_sensor( LEGO_EV3_COLOR, &sn_color, 0 )) {
 	      printf( "COLOR sensor is found, reading COLOR...\n" );
@@ -52,7 +52,10 @@ int main( void )
       activated = 1;
       if (activated){
         // throw the two ball initial ball already installed in the robot
+        search_ball_right(55);
+/*
         initial_throw();
+
         int distance_max_first_search = 50;
         int distance_max_second_search = 50;
         int distance_move_second_search = 20;
@@ -61,7 +64,7 @@ int main( void )
         search_ball_right(distance_max_first_search);
         search_ball_left(distance_max_first_search);
 
-        /*
+
         turn_gyro_left(45);
         move_forward(distance_move_second_search);
         turn_gyro_right(45);
@@ -77,9 +80,9 @@ int main( void )
         turn_gyro_right(45);
         move_backward(distance_move_second_search);
         turn_gyro_left(45);
-        */
+  */
           }
-    }
+
 
     ev3_uninit();
     printf( "*** ( EV3 ) Bye! ***\n" );
