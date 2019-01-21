@@ -9,7 +9,9 @@
 #include <math.h>
 #include <bluetooth/bluetooth.h>
 #include <bluetooth/rfcomm.h>
-
+#include "ev3.h"
+#include "ev3_port.h"
+#include "ev3_tacho.h"
 
 
 
@@ -118,11 +120,11 @@ void *mybluetooth(void *arg) {
         uint16_t message_id;
 
           printf("thread is created\n");
-                //while (bluetooth_state == DISCONNECTED) {                  // If not connected, try to reconnect
-                init_bluetooth();
-          printf("blue is created\n");
-                activated=1;
-              //  }
+                while (bluetooth_state == DISCONNECTED) {                  // If not connected, try to reconnect
+                  init_bluetooth();
+                  printf("blue is created\n");
+                  //activated=1;
+                }
                 while(1){
                 activated=1;
                 read_from_server (s, string, MESSAGE_MAX_LENGHT);; // Block until a message is received
@@ -132,12 +134,30 @@ void *mybluetooth(void *arg) {
 
                 if (string[4] == MSG_STOP) {
                   printf ("Received stop message!\n");
+                  int port = 65;
+                  for (port = 65; port < 69; port++) {
+                    uint8_t sn;
+                    if ( ev3_search_tacho_plugged_in(port,0, &sn, 0 )) {
+                    set_tacho_speed_sp( sn, 0);
+                    set_tacho_command_inx( sn, TACHO_RUN_FOREVER );
+                    set_tacho_stop_action_inx( sn, TACHO_COAST );
+                    }
+                  }
                   exit(0);
 
 
                 }
                 if (string[4] == MSG_KICK) {
                   printf ("Received kick message!\n");
+                  int port = 65;
+                  for (port = 65; port < 69; port++) {
+                    uint8_t sn;
+                    if ( ev3_search_tacho_plugged_in(port,0, &sn, 0 )) {
+                    set_tacho_speed_sp( sn, 0);
+                    set_tacho_command_inx( sn, TACHO_RUN_FOREVER );
+                    set_tacho_stop_action_inx( sn, TACHO_COAST );
+                    }
+                  }
                   exit(0);
 
 

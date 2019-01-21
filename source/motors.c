@@ -80,6 +80,7 @@ void turn_gyro_right(int degree)
     set_tacho_speed_sp(sn_motorB, 30);
     set_tacho_command_inx( sn_motorA, TACHO_RUN_FOREVER );
     set_tacho_command_inx( sn_motorB, TACHO_RUN_FOREVER );
+
     if(abs(og_angle%180) > 180) {
       flag = 1;
       og_angle -= 180;
@@ -473,13 +474,13 @@ void search_ball_left(int distance_max)
           }
           if ((current_value - previous_value > threshold) && (previous_value < 500)) {
               printf("Ball missed but then detected\n");
-              turn_gyro_right(10);
+              turn_gyro_right(25);
               Sleep(5000);
               flag_detected = 1;
               printf("%d\n",i);
               fflush( stdout );
 
-              i -= 3;
+              i -= 5;
               break;
           }
           previous_value = current_value;
@@ -488,7 +489,7 @@ void search_ball_left(int distance_max)
         // if the ball is detected it perform a turn
         if (flag_detected){
 
-            turn_gyro_left(6);
+            //turn_gyro_left(6);
             turn_gyro_left(180);
 
             flag_ball_caught =get_ball(min(current_value/10 + 8, distance_max));
@@ -499,7 +500,7 @@ void search_ball_left(int distance_max)
         // get back to the initial angle
         if (i>0) turn_gyro_right(5*i);
 
-        turn_gyro_right(6);
+        //turn_gyro_right(6);
         // if the ball is detected then it throw the ball
         if (flag_detected && flag_ball_caught){
             throw();

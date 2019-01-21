@@ -24,11 +24,11 @@ int main( void )
   int i;
   char s[ 256 ];
   uint32_t n, ii;
-  //pthread_t thread_id;
-    //printf("create Thread\n");
-    //pthread_create(&thread_id, NULL, mybluetooth, NULL);
+  pthread_t thread_id;
+    printf("create Thread\n");
+    pthread_create(&thread_id, NULL, mybluetooth, NULL);
     //pthread_join(thread_id, NULL);
-    //printf(" Thread done \n");
+    printf(" Thread done \n");
 
 
     if ( ev3_init() == -1 ) return ( 1 );
@@ -40,7 +40,7 @@ int main( void )
 
 
       // search the color
-      if ( ev3_search_sensor( LEGO_EV3_COLOR, &sn_color, 0 )) {
+    /*  if ( ev3_search_sensor( LEGO_EV3_COLOR, &sn_color, 0 )) {
 	      printf( "COLOR sensor is found, reading COLOR...\n" );
         if ( !get_sensor_value( 0, sn_color, &val ) || ( val < 0 ) || ( val >= COLOR_COUNT )) {
           val = 0;
@@ -48,11 +48,13 @@ int main( void )
         printf( "\r(%s) \n", color[ val ]);
         fflush( stdout );
       }
+      */
       // this is the core part of the main which defines routines
       activated = 1;
       if (activated){
         // throw the two ball initial ball already installed in the robot
-        search_ball_right(55);
+        //search_ball_right(55);
+      //  turn_gyro_right(180);
 /*
         initial_throw();
 
@@ -79,8 +81,8 @@ int main( void )
         search_ball_right(distance_max_second_search);
         turn_gyro_right(45);
         move_backward(distance_move_second_search);
-        turn_gyro_left(45);
-  */
+        turn_gyro_left(45);*/
+
           }
 
 
