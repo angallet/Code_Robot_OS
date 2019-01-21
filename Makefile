@@ -76,11 +76,11 @@ install-blue:
 
 # send the code on the robot
 send:
-	scp main robot@$(IP)
+	scp main robot@$(IP):
 
 # connect on the robot
 connect:
-	ssh robot@$(IP):
+	ssh robot@$(IP)
 
 # clean all the temporary files
 clean:
