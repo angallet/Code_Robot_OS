@@ -65,6 +65,7 @@ void robotscore () {
     write(s, string, 6);
     Sleep( 1000 );
     ack_msg_id = msgId;
+    printf("ok score sent to server");
 
 }
 
@@ -123,8 +124,8 @@ void *mybluetooth(void *arg) {
 
                 read_from_server (s, string, MESSAGE_MAX_LENGHT);; // Block until a message is received
 
-                if (string[2] == SERVER_TEAM_ID) continue;  // Bad sender (to prevent from other robot attack)
-                if (string[3] == TEAM_ID) continue;  // Bad destination
+                //if (string[2] == SERVER_TEAM_ID) continue;  // Bad sender (to prevent from other robot attack)
+                //if (string[3] == TEAM_ID) continue;  // Bad destination
 
                 switch(string[4]) {
                 /*case MSG_ACK:
