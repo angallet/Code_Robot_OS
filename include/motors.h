@@ -4,6 +4,7 @@ void sg_motor (int port, int time, int speed);
 void throw (void);
 void get_ball(int move_value);
 void get_ball22(int move_value, int *flag_ball_caught);
+void catch_ball(int *flag_ball_caught);
 void search_ball_left(void);
 void search_ball_right(void);
 void move_backward (int distance);

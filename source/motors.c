@@ -27,7 +27,6 @@
 #define MOTOR_LIFT 66
 #define MOTOR_CATAPULT 67
 //const char const *color[] = { "?", "BLACK", "BLUE", "GREEN", "YELLOW", "RED", "WHITE", "BROWN" };
-#define COLOR_COUNT  (( int )( sizeof( color ) / sizeof( color[ 0 ])))
 
 
 // function to move forward a set distance given by the parameters distance
@@ -346,36 +345,41 @@ void get_ball(int move_value)
 // function to get the ball
 void get_ball22(int move_value, int *flag_ball_caught)
 {
-    int old_val = val;
-      uint8_t sn_color;
-    printf( "%d this is the color\n", val);
-    fflush( stdout );
-    printf("get_ball\n" );
-
+    printf("Enter in the function getball22");
     disable_catapult();
 
     move_forward(move_value/10 + 8);
 
     enable_catapult();
     Sleep(500);
-    // turn the inner motor, the motor which perform the action of lifting the ball
-    sg_motor(MOTOR_LIFT,1000,-300);
-    if ( ev3_search_sensor( LEGO_EV3_COLOR, &sn_color, 0 )) {
-        printf( "COLOR sensor is found, reading COLOR...\n" );
-        if ( !get_sensor_value( 0, sn_color, &val ) || ( val < 0 )) {
-          val = 0;
-        }
-        printf( "\r(%s) \n", color[val] );
-	printf("",old_val, val);
-        fflush( stdout );
-      }
-    if (val != old_val) {
-        *flag_ball_caught = 1;
-    }
+    catch_ball(flag_ball_caught);
     Sleep(3000);
 
     move_backward(move_value/10 + 8);
 }
+
+// function to catch the ball
+void catch_ball(int *flag_ball_caught)
+{
+    printf("Enter in the function catch_ball \n");
+    uint8_t sn_color;
+    // turn the inner motor, the motor which perform the action of lifting the ball
+    sg_motor(MOTOR_LIFT,350,-300);
+    Sleep(3000);
+    if ( ev3_search_sensor( LEGO_EV3_COLOR, &sn_color, 0 )) {
+        if ( !get_sensor_value( 0, sn_color, &val ) || ( val < 0 ) ) {
+          val = 0;
+        }
+        printf( "COLOR sensor is found, the color is (%s) \n", color[val]  );
+        fflush( stdout );
+      }
+    if (val != 0) {
+	printf("A ball has been caught\n");
+        *flag_ball_caught = 1;
+    }
+    sg_motor(MOTOR_LIFT,400,-300);
+}
+
 
 // function to search the ball 
 void search_ball_left(void)
