@@ -39,11 +39,7 @@ int main( void )
     for ( ; ; ){
       // search the color
       if ( ev3_search_sensor( LEGO_EV3_COLOR, &sn_color, 0 )) {
-<<<<<<< HEAD
         //printf( "COLOR sensor is found, reading COLOR...\n" );
-=======
-	      printf( "COLOR sensor is found, reading COLOR...\n" );
->>>>>>> 704f3a9d29ae7b7cbff5fae591d7017d8e639882
         if ( !get_sensor_value( 0, sn_color, &val ) || ( val < 0 ) || ( val >= COLOR_COUNT )) {
           val = 0;
         }
@@ -55,13 +51,8 @@ int main( void )
       printf("%d\n",flag);
       fflush(stdout);
       // this is the core part of the main which defines routines
-<<<<<<< HEAD
       if (activated==1){
 ;        printf("activated\n");
-=======
-      move_forward(100);
-      if (activated){
->>>>>>> 704f3a9d29ae7b7cbff5fae591d7017d8e639882
         // throw the two ball initial ball already installed in the robot
         initial_throw();
         search_ball_right();
