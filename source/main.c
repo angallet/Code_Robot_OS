@@ -48,7 +48,7 @@ int main( void )
         printf( "\r(%s) \n", color[ val ]);
         fflush( stdout );
       }
-      Sleep(6000);
+      Sleep(1000);
       // this is the core part of the main which defines routines
         search_ball_right(50);
       if (activated){

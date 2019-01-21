@@ -78,10 +78,10 @@ void turn_gyro_right(int degree)
     set_tacho_speed_sp(sn_motorB, 30);
     set_tacho_command_inx( sn_motorA, TACHO_RUN_FOREVER );
     set_tacho_command_inx( sn_motorB, TACHO_RUN_FOREVER );
- 
+
     while (abs((int)angle%360-og_angle) < degree)
     {
-      printf("og_angle = %d, angle = %d, diff = %d \n", og_angle,(int) angle%360, (int)angle%360-og_angle);
+      //printf("og_angle = %d, angle = %d, diff = %d \n", og_angle,(int) angle%360, (int)angle%360-og_angle);
       fflush(stdout);
       if (current_diff == (int)angle%360-og_angle) counter ++;
       else{
@@ -91,7 +91,6 @@ void turn_gyro_right(int degree)
       if (counter == max_iter) break;
       get_sensor_value0(sn_gyro, &angle);
      }
-    printf("After the while");
     fflush(stdout);
     set_tacho_speed_sp( sn_motorA, 0);
     set_tacho_speed_sp( sn_motorB, 0);
@@ -128,20 +127,20 @@ void turn_gyro_left(int degree)
     set_tacho_speed_sp(sn_motorB, -30);
     set_tacho_command_inx( sn_motorA, TACHO_RUN_FOREVER );
     set_tacho_command_inx( sn_motorB, TACHO_RUN_FOREVER );
- 
+
     while (abs((int)angle%360-og_angle) < degree)
     {
-      printf("og_angle = %d, angle = %d, diff = %d , counter = %d\n", og_angle,(int) angle%360, (int)angle%360-og_angle, counter);
-      fflush(stdout);
-      if (current_diff == (int)angle%360-og_angle) counter ++;
+      //printf("og_angle = %d, angle = %d, diff = %d , counter = %d\n", og_angle,(int) angle%360, (int)angle%360-og_angle, counter);
+      //fflush(stdout);
+      /*if (current_diff == (int)angle%360-og_angle) counter ++;
       else{
 	counter = 0;
 	current_diff = (int)angle%360-og_angle;
       }
-      if (counter == max_iter) break;
+      if (counter == max_iter) break;*/
       get_sensor_value0(sn_gyro, &angle);
      }
-    printf("After the while");
+    //printf("After the while");
     fflush(stdout);
     set_tacho_speed_sp( sn_motorA, 0);
     set_tacho_speed_sp( sn_motorB, 0);
@@ -172,10 +171,10 @@ void turn_gyro_left_1(int degree)
     og_angle= (int) angle % 360;
     set_tacho_speed_sp( sn_motorB, 60);
     set_tacho_command_inx( sn_motorB, TACHO_RUN_FOREVER );
- 
+
     while (abs((int)angle%360-og_angle) < degree)
     {
-      printf("og_angle = %d, angle = %d, diff = %d , counter = %d\n", og_angle,(int) angle%360, (int)angle%360-og_angle, counter);
+      //printf("og_angle = %d, angle = %d, diff = %d , counter = %d\n", og_angle,(int) angle%360, (int)angle%360-og_angle, counter);
       fflush(stdout);
       if (current_diff == (int)angle%360-og_angle) counter ++;
       else{
@@ -185,7 +184,7 @@ void turn_gyro_left_1(int degree)
       if (counter == max_iter) break;
       get_sensor_value0(sn_gyro, &angle);
      }
-    printf("After the while");
+    //printf("After the while");
     fflush(stdout);
     set_tacho_speed_sp( sn_motorB, 0);
     set_tacho_command_inx( sn_motorB, TACHO_RUN_FOREVER );
@@ -220,12 +219,12 @@ void turn_gyro_left2(int degree)
     set_tacho_time_sp( sn_motorB, time );
     set_tacho_command_inx( sn_motorA, TACHO_RUN_TIMED );
     set_tacho_command_inx( sn_motorB, TACHO_RUN_TIMED );
-    
+
     while (abs((int)angle%360-og_angle) < degree)
     {
-      printf("og_angle = %d, angle = %d, diff = %d \n", og_angle,(int) angle%360, (int)angle%360-og_angle);
+      //printf("og_angle = %d, angle = %d, diff = %d \n", og_angle,(int) angle%360, (int)angle%360-og_angle);
       fflush(stdout);
-      
+
       set_tacho_speed_sp( sn_motorA, 30);
       set_tacho_speed_sp(sn_motorB, -30);
       set_tacho_time_sp( sn_motorA, time );
@@ -342,7 +341,7 @@ void disable_catapult(void)
     }
 }
 
-// function to enable the catapult 
+// function to enable the catapult
 void enable_catapult(void)
 {
     uint8_t sn;
@@ -400,7 +399,7 @@ void catch_ball(int *flag_ball_caught)
 }
 
 
-// function to search the ball 
+// function to search the ball
 void search_ball_left(int distance_max)
 {
     int i;
@@ -427,7 +426,7 @@ void search_ball_left(int distance_max)
           }
 
           printf( "\r%d : current value %f, previous value %f \n", angle, current_value,previous_value);
-          // the two followin condition express our way to detect the ball 
+          // the two followin condition express our way to detect the ball
           if ((previous_value - current_value > threshold) && (previous_value < 500)) {
               printf("Ball detected\n");
               fflush( stdout );
@@ -457,9 +456,9 @@ void search_ball_left(int distance_max)
 
             turn_gyro_left(6);
             turn_gyro_left(180);
-	    
+
             get_ball(min(current_value/10 + 8, distance_max),&flag_ball_caught);
-            
+
             turn_gyro_right(180);
         }
 
@@ -474,7 +473,7 @@ void search_ball_left(int distance_max)
     }
 }
 
-// function to search the ball 
+// function to search the ball
 void search_ball_right(int distance_max)
 {
     int i;
@@ -501,7 +500,7 @@ void search_ball_right(int distance_max)
           }
 
           printf( "\r%d : current value %f, previous value %f \n", angle, current_value,previous_value);
-          // the two followin condition express our way to detect the ball 
+          // the two followin condition express our way to detect the ball
           if ((previous_value - current_value > threshold) && (previous_value < 500)) {
               printf("Ball detected\n");
               fflush( stdout );
@@ -514,7 +513,7 @@ void search_ball_right(int distance_max)
           }
           if ((current_value - previous_value > threshold) && (previous_value < 500)) {
               printf("Ball missed but then detected\n");
-              turn_gyro_left(10);
+              turn_gyro_left(15);
               Sleep(5000);
               flag_detected = 1;
               printf("%d\n",i);
@@ -531,9 +530,9 @@ void search_ball_right(int distance_max)
 
             turn_gyro_right(6);
             turn_gyro_right(180);
-          
+
             get_ball(min(current_value/10 + 8, distance_max),&flag_ball_caught);
-            
+
             turn_gyro_left(180);
         }
 
