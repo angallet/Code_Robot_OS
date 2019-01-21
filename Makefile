@@ -70,6 +70,10 @@ docker:
 install-shared:
 	cd ev3dev-c/source/ev3/&&make&&sudo make install&&make shared&&sudo make shared-install
 
+# install the bluetooth library on the docker have to be run as root
+install-blue:
+	apt-get update && apt-get -y install libbluetooth-dev
+
 # send the code on the robot
 send:
 	scp main robot@$(IP):
