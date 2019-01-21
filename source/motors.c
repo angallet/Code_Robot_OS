@@ -79,9 +79,9 @@ void turn_gyro_right(int degree)
     set_tacho_command_inx( sn_motorA, TACHO_RUN_FOREVER );
     set_tacho_command_inx( sn_motorB, TACHO_RUN_FOREVER );
 
-    while (abs((int)angle%360-og_angle) < degree)
+    while (abs((int)angle-og_angle)%360 < degree)
     {
-      //printf("og_angle = %d, angle = %d, diff = %d \n", og_angle,(int) angle%360, (int)angle%360-og_angle);
+      printf("og_angle = %d, angle = %d, diff = %d \n", og_angle,(int) angle%360, (int)angle%360-og_angle);
       fflush(stdout);
       if (current_diff == (int)angle%360-og_angle) counter ++;
       else{
@@ -128,10 +128,10 @@ void turn_gyro_left(int degree)
     set_tacho_command_inx( sn_motorA, TACHO_RUN_FOREVER );
     set_tacho_command_inx( sn_motorB, TACHO_RUN_FOREVER );
 
-    while (abs((int)angle%360-og_angle) < degree)
+    while (abs((int)angle-og_angle)%360 < degree)
     {
-      //printf("og_angle = %d, angle = %d, diff = %d , counter = %d\n", og_angle,(int) angle%360, (int)angle%360-og_angle, counter);
-      //fflush(stdout);
+      printf("og_angle = %d, angle = %d, diff = %d , counter = %d\n", og_angle,(int) angle%360, (int)angle%360-og_angle, counter);
+      fflush(stdout);
       /*if (current_diff == (int)angle%360-og_angle) counter ++;
       else{
 	counter = 0;
@@ -172,7 +172,7 @@ void turn_gyro_left_1(int degree)
     set_tacho_speed_sp( sn_motorB, 60);
     set_tacho_command_inx( sn_motorB, TACHO_RUN_FOREVER );
 
-    while (abs((int)angle%360-og_angle) < degree)
+    while (abs((int)angle-og_angle)%360 < degree)
     {
       //printf("og_angle = %d, angle = %d, diff = %d , counter = %d\n", og_angle,(int) angle%360, (int)angle%360-og_angle, counter);
       fflush(stdout);
@@ -220,7 +220,7 @@ void turn_gyro_left2(int degree)
     set_tacho_command_inx( sn_motorA, TACHO_RUN_TIMED );
     set_tacho_command_inx( sn_motorB, TACHO_RUN_TIMED );
 
-    while (abs((int)angle%360-og_angle) < degree)
+    while (abs((int)angle-og_angle)%360 < degree)
     {
       //printf("og_angle = %d, angle = %d, diff = %d \n", og_angle,(int) angle%360, (int)angle%360-og_angle);
       fflush(stdout);
@@ -320,7 +320,7 @@ void initial_throw(void)
   throw();
   // turn the inner motor, the motor which perform the action of lifting the ball
   sg_motor(MOTOR_LIFT ,1000,-300);
-  Sleep(500);
+  Sleep(1500);
   // throw the second ball
 
   throw();
@@ -361,24 +361,26 @@ void enable_catapult(void)
 
 
 // function to get the ball
-void get_ball(int move_value, int *flag_ball_caught)
+int get_ball(int move_value)
 {
+    int flag = 0;
     printf("Enter in the function getball22\n");
     disable_catapult();
 
     move_forward(move_value);
 
     Sleep(500);
-    catch_ball(flag_ball_caught);
+     flag =catch_ball();
     Sleep(500);
 
     move_backward(move_value);
     enable_catapult();
     sg_motor(MOTOR_LIFT,390,-300);
+    return flag;
 }
 
 // function to catch the ball
-void catch_ball(int *flag_ball_caught)
+int catch_ball(void)
 {
     printf("Enter in the function catch_ball \n");
     uint8_t sn_color;
@@ -394,8 +396,9 @@ void catch_ball(int *flag_ball_caught)
       }
     if (val != 0) {
 	printf("A ball has been caught\n");
-        *flag_ball_caught = 1;
+      return 1;
     }
+  return 0;
 }
 
 
@@ -457,8 +460,8 @@ void search_ball_left(int distance_max)
             turn_gyro_left(6);
             turn_gyro_left(180);
 
-            get_ball(min(current_value/10 + 8, distance_max),&flag_ball_caught);
-
+            flag_ball_caught =get_ball(min(current_value/10 + 8, distance_max));
+            printf("I will do a turn ...");
             turn_gyro_right(180);
         }
 
@@ -531,7 +534,7 @@ void search_ball_right(int distance_max)
             turn_gyro_right(6);
             turn_gyro_right(180);
 
-            get_ball(min(current_value/10 + 8, distance_max),&flag_ball_caught);
+            flag_ball_caught = get_ball(min(current_value/10 + 8, distance_max));
 
             turn_gyro_left(180);
         }

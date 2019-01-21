@@ -48,17 +48,37 @@ int main( void )
         printf( "\r(%s) \n", color[ val ]);
         fflush( stdout );
       }
-      Sleep(1000);
       // this is the core part of the main which defines routines
-        search_ball_right(50);
+      activated = 1;
       if (activated){
         // throw the two ball initial ball already installed in the robot
-        //initial_throw();
-        //search_ball_right();
-        //search_ball_left();
-        //search_ball_right();
-        //search_ball_left();
-      }
+        initial_throw();
+        int distance_max_first_search = 50;
+        int distance_max_second_search = 50;
+        int distance_move_second_search = 20;
+        search_ball_right(distance_max_first_search);
+        search_ball_left(distance_max_first_search);
+        search_ball_right(distance_max_first_search);
+        search_ball_left(distance_max_first_search);
+
+        /*
+        turn_gyro_left(45);
+        move_forward(distance_move_second_search);
+        turn_gyro_right(45);
+        search_ball_left(distance_max_second_search);
+        turn_gyro_left(45);
+        move_backward(distance_move_second_search);
+        turn_gyro_right(45);
+
+        turn_gyro_right(45);
+        move_forward(distance_move_second_search);
+        turn_gyro_left(45);
+        search_ball_right(distance_max_second_search);
+        turn_gyro_right(45);
+        move_backward(distance_move_second_search);
+        turn_gyro_left(45);
+        */
+          }
     }
 
     ev3_uninit();
