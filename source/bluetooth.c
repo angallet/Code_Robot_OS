@@ -30,6 +30,7 @@
 
 
 int s;
+int activated;
 uint16_t msgId = 0;                                         // Bluetooth socket
 enum BtState bluetooth_state = DISCONNECTED;    // State of connexion
 uint16_t ack_msg_id = 0;
@@ -65,7 +66,7 @@ void robotscore () {
     write(s, string, 6);
     Sleep( 1000 );
     ack_msg_id = msgId;
-    printf("ok score sent to server");
+    printf("ok score sent to server\n");
 
 }
 
@@ -73,41 +74,41 @@ void robotscore () {
 
 int init_bluetooth( void )
 {
-        struct sockaddr_rc addr = { 0 };
-        int status;
-        int activated;
+  struct sockaddr_rc addr = { 0 };
+  int status;
+  activated=0;
+
+  /* allocate a socket */
+  s = socket(AF_BLUETOOTH, SOCK_STREAM, BTPROTO_RFCOMM);
+
+  /* set the connection parameters (who to connect to) */
+  addr.rc_family = AF_BLUETOOTH;
+  addr.rc_channel = (uint8_t) 1;
+  str2ba (SERV_ADDR, &addr.rc_bdaddr);
+
+  /* connect to server */
+  status = connect(s, (struct sockaddr *)&addr, sizeof(addr));
+
+  /* if connected */
+  if( status == 0 ) {
+    char string[58];
+
+    /* Wait for START message */
+    read_from_server (s, string, 9);
+    if (string[4] == MSG_START) {
+      printf ("Received start message!\n");
+      activated=1;
 
 
-        // allocate a socket
-        s = socket(AF_BLUETOOTH, SOCK_STREAM, BTPROTO_RFCOMM);
+    }
 
-        addr.rc_family = AF_BLUETOOTH;
-        addr.rc_channel = (uint8_t) 1;
-        str2ba(SERV_ADDR, &addr.rc_bdaddr);
+  } else {
+    fprintf (stderr, "Failed to connect to server...\n");
+    sleep (2);
+    exit (EXIT_FAILURE);
+  }
 
-        // connect to server
-        status = connect(s, (struct sockaddr *)&addr, sizeof(addr));
-
-        // if not connected
-        if( status != 0 ) {
-                printf("Failed to connect to server...");
-                bluetooth_state = DISCONNECTED;
-                return ( 1 ); // TODO change to 0 when server is available
-        }
-        bluetooth_state = CONNECTED;
-        return ( 1 );
-        /* if connected */
-        if( status == 0 ) {
-          char string[58];
-
-          /* Wait for START message */
-          read_from_server (s, string, 9);
-          if (string[4] == MSG_START) {
-            printf ("Received start message!\n");
-            activated=1;
-          }
-
-}
+  return 0;
 }
 
 
@@ -116,37 +117,32 @@ void *mybluetooth(void *arg) {
         char string[MESSAGE_MAX_LENGHT];
         uint16_t message_id;
 
-
-                while (bluetooth_state == DISCONNECTED) {                  // If not connected, try to reconnect
-                        init_bluetooth();
-                }
-                while( activated==1){
-
+          printf("thread is created\n");
+                //while (bluetooth_state == DISCONNECTED) {                  // If not connected, try to reconnect
+                init_bluetooth();
+          printf("blue is created\n");
+                activated=1;
+              //  }
+                while(1){
+                activated=1;
                 read_from_server (s, string, MESSAGE_MAX_LENGHT);; // Block until a message is received
 
                 //if (string[2] == SERVER_TEAM_ID) continue;  // Bad sender (to prevent from other robot attack)
                 //if (string[3] == TEAM_ID) continue;  // Bad destination
 
-                switch(string[4]) {
-                /*case MSG_ACK:
-                        message_id = string[6] << 8 | string[5];
-                        if (message_id != ack_msg_id)
-                                printf("not the right ack");
-                                robotscore();
-                        if (string[7] != 0)
-                                printf("error with server");
-                                robotscore();
-                        ack_msg_id = message_id;
-                        break;*/
-                case MSG_STOP:
-                        printf("Game stop sent by server");
-                        activated=0;
-                        break;
-                case MSG_KICK:
-                        printf("a robot got kicked by server");
-                        activated=0;
-                        break;
+                if (string[4] == MSG_STOP) {
+                  printf ("Received stop message!\n");
+                  exit(0);
+
+
                 }
+                if (string[4] == MSG_KICK) {
+                  printf ("Received kick message!\n");
+                  exit(0);
+
+
+                }
+
         }
 
         close(s);
