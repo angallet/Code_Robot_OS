@@ -76,7 +76,7 @@ install-blue:
 
 # send the code on the robot
 send:
-	scp main robot@$(IP):
+	scp main robot@$(IP)
 
 # connect on the robot
 connect:

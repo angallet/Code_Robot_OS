@@ -117,6 +117,7 @@ void *mybluetooth(void *arg) {
         char string[MESSAGE_MAX_LENGHT];
         uint16_t message_id;
 
+<<<<<<< HEAD
           printf("thread is created\n");
                 //while (bluetooth_state == DISCONNECTED) {                  // If not connected, try to reconnect
                 init_bluetooth();
@@ -125,6 +126,14 @@ void *mybluetooth(void *arg) {
               //  }
                 while(1){
                 activated=1;
+=======
+
+//                while (bluetooth_state == DISCONNECTED) {                  // If not connected, try to reconnect
+                        init_bluetooth();
+  //              }
+                while( activated==1){
+
+>>>>>>> 704f3a9d29ae7b7cbff5fae591d7017d8e639882
                 read_from_server (s, string, MESSAGE_MAX_LENGHT);; // Block until a message is received
 
                 //if (string[2] == SERVER_TEAM_ID) continue;  // Bad sender (to prevent from other robot attack)

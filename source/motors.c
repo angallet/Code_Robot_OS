@@ -26,6 +26,8 @@
 #define MOTOR_B 68
 #define MOTOR_LIFT 66
 #define MOTOR_CATAPULT 67
+//const char const *color[] = { "?", "BLACK", "BLUE", "GREEN", "YELLOW", "RED", "WHITE", "BROWN" };
+#define COLOR_COUNT  (( int )( sizeof( color ) / sizeof( color[ 0 ])))
 
 
 // function to move forward a set distance given by the parameters distance
@@ -151,6 +153,65 @@ void turn_gyro_left(int degree)
   }
 }
 
+// function to turn left using the gyroscope
+void turn_gyro_left2(int degree)
+{
+  uint8_t sn_gyro;
+  uint8_t sn_motorA;
+  uint8_t sn_motorB;
+  int port_gyro = 50;
+  float angle;
+  int og_angle;
+  int max_iter = 50;
+  int current_diff = 0;
+  int counter = 0;
+  int time = 100;
+  printf("Enter the function turn_gyro_right, degree = %d\n",degree);
+  if ( ev3_search_sensor( LEGO_EV3_GYRO, &sn_gyro, 0 ) &&
+  ev3_search_tacho_plugged_in(MOTOR_A,0, &sn_motorA, 0 ) &&
+  ev3_search_tacho_plugged_in(MOTOR_B,0, &sn_motorB, 0 ))
+  {
+    set_tacho_stop_action_inx( sn_motorA, TACHO_COAST );
+    set_tacho_stop_action_inx( sn_motorB, TACHO_COAST );
+    get_sensor_value0(sn_gyro, &angle );
+    og_angle= (int) angle % 360;
+    set_tacho_speed_sp( sn_motorA, 30);
+    set_tacho_speed_sp(sn_motorB, -30);
+    set_tacho_time_sp( sn_motorA, time );
+    set_tacho_time_sp( sn_motorB, time );
+    set_tacho_command_inx( sn_motorA, TACHO_RUN_TIMED );
+    set_tacho_command_inx( sn_motorB, TACHO_RUN_TIMED );
+    
+    while (abs((int)angle%360-og_angle) < degree)
+    {
+      printf("og_angle = %d, angle = %d, diff = %d \n", og_angle,(int) angle%360, (int)angle%360-og_angle);
+      fflush(stdout);
+      
+      set_tacho_speed_sp( sn_motorA, 30);
+      set_tacho_speed_sp(sn_motorB, -30);
+      set_tacho_time_sp( sn_motorA, time );
+      set_tacho_time_sp( sn_motorB, time );
+      set_tacho_command_inx( sn_motorA, TACHO_RUN_TIMED );
+      set_tacho_command_inx( sn_motorB, TACHO_RUN_TIMED );
+      Sleep(100);
+      if (current_diff == (int)angle%360-og_angle) counter ++;
+      else{
+	counter = 0;
+	current_diff = (int)angle%360-og_angle;
+      }
+      if (counter == max_iter) break;
+      get_sensor_value0(sn_gyro, &angle);
+     }
+    printf("After the while");
+    fflush(stdout);
+    set_tacho_speed_sp( sn_motorA, 0);
+    set_tacho_speed_sp( sn_motorB, 0);
+    set_tacho_command_inx( sn_motorA, TACHO_RUN_FOREVER );
+    set_tacho_command_inx( sn_motorB, TACHO_RUN_FOREVER );
+    set_tacho_stop_action_inx( sn_motorA, TACHO_COAST );
+    set_tacho_stop_action_inx( sn_motorB, TACHO_COAST );
+  }
+}
 
 
 // function to turn left
@@ -190,13 +251,6 @@ void sg_motor (int port, int time, int speed)
     }
 }
 
-// funcion to turn a quarter turn on the left
-void quarter_turn (void)
-{
-  uint8_t sn;
-  sg_motor(MOTOR_A, 540, 300);
-  sg_motor(MOTOR_B, 540, -300);
-}
 
 // function to permform a 3 point throw
 void throw (void)
@@ -311,7 +365,8 @@ void get_ball22(int move_value, int *flag_ball_caught)
         if ( !get_sensor_value( 0, sn_color, &val ) || ( val < 0 )) {
           val = 0;
         }
-        printf( "\r(%d) \n",val );
+        printf( "\r(%s) \n", color[val] );
+	printf("",old_val, val);
         fflush( stdout );
       }
     if (val != old_val) {
