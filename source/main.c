@@ -9,9 +9,8 @@
 #include <pthread.h>
 #include "bluetooth.h"
 #define Sleep( msec ) usleep(( msec ) * 1000 )
-const char const *color[] = { "?", "BLACK", "BLUE", "GREEN", "YELLOW", "RED", "WHITE", "BROWN" };
+const char const *color[] = { "?", "BLACK", "BLUE", "GREEN", "YELLOW", "RED", "WHITE", "BROWN"};
 #define COLOR_COUNT  (( int )( sizeof( color ) / sizeof( color[ 0 ])))
-
 static bool _check_pressed( uint8_t sn );
 int val;
 int activated = 0;
@@ -42,7 +41,7 @@ int main( void )
     for ( ; ; ){
       // search the color
       if ( ev3_search_sensor( LEGO_EV3_COLOR, &sn_color, 0 )) {
-        printf( "COLOR sensor is found, reading COLOR...\n" );
+	      printf( "COLOR sensor is found, reading COLOR...\n" );
         if ( !get_sensor_value( 0, sn_color, &val ) || ( val < 0 ) || ( val >= COLOR_COUNT )) {
           val = 0;
         }
@@ -54,6 +53,7 @@ int main( void )
       printf("%d\n",flag);
       fflush(stdout);
       // this is the core part of the main which defines routines
+      move_forward(100);
       if (activated){
         // throw the two ball initial ball already installed in the robot
         initial_throw();

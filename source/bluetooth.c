@@ -116,9 +116,9 @@ void *mybluetooth(void *arg) {
         uint16_t message_id;
 
 
-                while (bluetooth_state == DISCONNECTED) {                  // If not connected, try to reconnect
+//                while (bluetooth_state == DISCONNECTED) {                  // If not connected, try to reconnect
                         init_bluetooth();
-                }
+  //              }
                 while( activated==1){
 
                 read_from_server (s, string, MESSAGE_MAX_LENGHT);; // Block until a message is received
