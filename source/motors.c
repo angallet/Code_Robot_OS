@@ -407,7 +407,7 @@ int get_ball(int move_value)
 
     move_backward(move_value);
     enable_catapult();
-    sg_motor(MOTOR_LIFT,300,-300);
+    sg_motor(MOTOR_LIFT,280,-300);
     return flag;
 }
 
@@ -474,13 +474,13 @@ void search_ball_left(int distance_max)
           }
           if ((current_value - previous_value > threshold) && (previous_value < 500)) {
               printf("Ball missed but then detected\n");
-              turn_gyro_right(30);
+              turn_gyro_right(25);
               Sleep(5000);
               flag_detected = 1;
               printf("%d\n",i);
               fflush( stdout );
 
-              i -= 6;
+              i -= 5;
               break;
           }
           previous_value = current_value;
