@@ -451,7 +451,7 @@ void search_ball_left(int distance_max)
             previous_value = 0;
         }
         // the robot will rotate and search for the ball accordingly to the protocol define below
-        for(i=0; i < 18; i++)
+        for(i=0; i < 20; i++)
         {
           turn_gyro_left(5);
           angle = i*5;
@@ -525,7 +525,7 @@ void search_ball_right(int distance_max)
             previous_value = 0;
         }
         // the robot will rotate and search for the ball accordingly to the protocol define below
-        for(i=0; i < 18; i++)
+        for(i=0; i < 20; i++)
         {
           turn_gyro_right(5);
           angle = i*5;

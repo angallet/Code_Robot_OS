@@ -19,7 +19,7 @@
 
 
 #define SERV_ADDR       "14:AB:C5:34:E7:FB"  /* Whatever the address of the server is */
-#define TEAM_ID     1                       /* Your team ID */
+#define TEAM_ID     2                       /* Your team ID */
 #define SERVER_TEAM_ID          0xFF
 #define MSG_ACK     0
 #define MSG_START    1
