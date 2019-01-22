@@ -18,7 +18,7 @@
 #define Sleep( msec ) usleep(( msec ) * 1000 )
 
 
-#define SERV_ADDR       "3C:A0:67:9C:64:BC"  /* Whatever the address of the server is */
+#define SERV_ADDR       "14:AB:CA:34:E7:FB"  /* Whatever the address of the server is */
 #define TEAM_ID     1                       /* Your team ID */
 #define SERVER_TEAM_ID          0xFF
 #define MSG_ACK     0
