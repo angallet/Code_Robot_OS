@@ -26,7 +26,7 @@ int main( void )
   uint32_t n, ii;
   pthread_t thread_id;
     printf("create Thread\n");
-    pthread_create(&thread_id, NULL, mybluetooth, NULL);
+    //pthread_create(&thread_id, NULL, mybluetooth, NULL);
     //pthread_join(thread_id, NULL);
     printf(" Thread done \n");
 
@@ -50,23 +50,26 @@ int main( void )
       }
       */
       // this is the core part of the main which defines routines
+      //search_ball_left(50);
       activated = 1;
       if (activated){
         // throw the two ball initial ball already installed in the robot
         //search_ball_right(55);
       //  turn_gyro_right(180);
-/*
         initial_throw();
 
         int distance_max_first_search = 50;
         int distance_max_second_search = 50;
         int distance_move_second_search = 20;
-        search_ball_right(distance_max_first_search);
-        search_ball_left(distance_max_first_search);
-        search_ball_right(distance_max_first_search);
-        search_ball_left(distance_max_first_search);
+        while (activated) {
+          search_ball_right(distance_max_first_search);
+          search_ball_left(distance_max_first_search);
+          search_ball_right(distance_max_first_search);
+          search_ball_left(distance_max_first_search);
+        }
 
 
+/*
         turn_gyro_left(45);
         move_forward(distance_move_second_search);
         turn_gyro_right(45);
@@ -85,6 +88,7 @@ int main( void )
 
           }
 
+          pthread_join(thread_id, NULL);
 
     ev3_uninit();
     printf( "*** ( EV3 ) Bye! ***\n" );

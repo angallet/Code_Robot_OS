@@ -407,7 +407,7 @@ int get_ball(int move_value)
 
     move_backward(move_value);
     enable_catapult();
-    sg_motor(MOTOR_LIFT,330,-300);
+    sg_motor(MOTOR_LIFT,300,-300);
     return flag;
 }
 
@@ -417,7 +417,7 @@ int catch_ball(void)
     printf("Enter in the function catch_ball \n");
     uint8_t sn_color;
     // turn the inner motor, the motor which perform the action of lifting the ball
-    sg_motor(MOTOR_LIFT,380,-300);
+    sg_motor(MOTOR_LIFT,400,-300);
     Sleep(500);
     if ( ev3_search_sensor( LEGO_EV3_COLOR, &sn_color, 0 )) {
         if ( !get_sensor_value( 0, sn_color, &val ) || ( val < 0 ) ) {
@@ -474,13 +474,13 @@ void search_ball_left(int distance_max)
           }
           if ((current_value - previous_value > threshold) && (previous_value < 500)) {
               printf("Ball missed but then detected\n");
-              turn_gyro_right(25);
+              turn_gyro_right(30);
               Sleep(5000);
               flag_detected = 1;
               printf("%d\n",i);
               fflush( stdout );
 
-              i -= 5;
+              i -= 6;
               break;
           }
           previous_value = current_value;
@@ -492,7 +492,7 @@ void search_ball_left(int distance_max)
             //turn_gyro_left(6);
             turn_gyro_left(180);
 
-            flag_ball_caught =get_ball(min(current_value/10 + 8, distance_max));
+            flag_ball_caught =get_ball(min(current_value/10 + 12, distance_max));
             printf("I will do a turn ...");
             turn_gyro_right(180);
         }
@@ -566,7 +566,7 @@ void search_ball_right(int distance_max)
             //turn_gyro_right(6);
             turn_gyro_right(180);
 
-            flag_ball_caught = get_ball(min(current_value/10 + 8, distance_max));
+            flag_ball_caught = get_ball(min(current_value/10 + 12, distance_max));
 
             turn_gyro_left(180);
         }
