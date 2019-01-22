@@ -120,11 +120,11 @@ void *mybluetooth(void *arg) {
         uint16_t message_id;
 
           printf("thread is created\n");
-                while (bluetooth_state == DISCONNECTED) {                  // If not connected, try to reconnect
+              //  while (bluetooth_state == DISCONNECTED) {                  // If not connected, try to reconnect
                   init_bluetooth();
                   printf("blue is created\n");
                   //activated=1;
-                }
+              //  }
                 while(1){
                 activated=1;
                 read_from_server (s, string, MESSAGE_MAX_LENGHT);; // Block until a message is received

@@ -26,7 +26,7 @@ int main( void )
   uint32_t n, ii;
   pthread_t thread_id;
     printf("create Thread\n");
-    //pthread_create(&thread_id, NULL, mybluetooth, NULL);
+    pthread_create(&thread_id, NULL, mybluetooth, NULL);
     //pthread_join(thread_id, NULL);
     printf(" Thread done \n");
 
@@ -51,7 +51,11 @@ int main( void )
       */
       // this is the core part of the main which defines routines
       //search_ball_left(50);
-      activated = 1;
+      //activated = 1;
+      while (activated != 1) {
+        int i = 0;
+        i ++;
+      }
       if (activated){
         // throw the two ball initial ball already installed in the robot
         //search_ball_right(55);
