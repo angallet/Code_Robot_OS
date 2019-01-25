@@ -1,17 +1,17 @@
 #define MOTORS_H
 void move_forward (int distance);
-void sg_motor_deg (int port, int deg, int speed);
 void sg_motor (int port, int time, int speed);
-void init_motors(void);
-void quarter_turn (void);
 void throw (void);
-void get_ball(int move_value);
-void get_ball22(int move_value, int *flag_ball_caught);
-void turn (int degree);
-void search_ball_left(void);
-void search_ball_right(void);
+int get_ball(int move_value);
+int catch_ball(void);
+void search_ball_left(int distance_max);
+void search_ball_right(int distance_max);
 void move_backward (int distance);
 void turn_gyro_right(int degree);
 void turn_gyro_left(int degree);
+//void turn_gyro_left_1(int degree);
+//void turn_gyro_left2(int degree);
+void turn_left (int degree);
+void turn_right (int degree);
 extern int val;
-//void search_ball_right(void);
+extern const char const *color[];

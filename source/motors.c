@@ -26,7 +26,8 @@
 #define MOTOR_B 68
 #define MOTOR_LIFT 66
 #define MOTOR_CATAPULT 67
-
+//const char const *color[] = { "?", "BLACK", "BLUE", "GREEN", "YELLOW", "RED", "WHITE", "BROWN" };
+#define min( a, b ) ( ((a) < (b)) ? (a) : (b) )
 
 // function to move forward a set distance given by the parameters distance
 void move_forward (int distance)
@@ -64,6 +65,8 @@ void turn_gyro_right(int degree)
   int max_iter = 50;
   int current_diff = 0;
   int counter = 0;
+  int flag = 0;
+  int flag_first=1;
   printf("Enter the function turn_gyro_right, degree = %d\n",degree);
   if ( ev3_search_sensor( LEGO_EV3_GYRO, &sn_gyro, 0 ) &&
   ev3_search_tacho_plugged_in(MOTOR_A,0, &sn_motorA, 0 ) &&
@@ -77,20 +80,33 @@ void turn_gyro_right(int degree)
     set_tacho_speed_sp(sn_motorB, 30);
     set_tacho_command_inx( sn_motorA, TACHO_RUN_FOREVER );
     set_tacho_command_inx( sn_motorB, TACHO_RUN_FOREVER );
- 
-    while (abs((int)angle%360-og_angle) < degree)
-    {
-      printf("og_angle = %d, angle = %d, diff = %d \n", og_angle,(int) angle%360, (int)angle%360-og_angle);
-      fflush(stdout);
-      if (current_diff == (int)angle%360-og_angle) counter ++;
-      else{
-	counter = 0;
-	current_diff = (int)angle%360-og_angle;
-      }
-      if (counter == max_iter) break;
-      get_sensor_value0(sn_gyro, &angle);
-     }
-    printf("After the while");
+
+    if(abs(og_angle%180) > 180) {
+      flag = 1;
+      og_angle -= 180;
+    }
+      while (abs((int)angle%360-og_angle) < degree)
+      {
+
+/*
+        if (current_diff == (int)angle%360-og_angle) counter ++;
+        else{
+  	counter = 0;
+  	current_diff = (int)angle%360-og_angle;
+        }
+        if (counter == max_iter) break;
+        */
+        get_sensor_value0(sn_gyro, &angle);
+        angle -= flag*180;
+        if ((int)angle%360 == 0 && flag_first){
+          flag_first = 0;
+          og_angle = abs(og_angle) - 360;
+        }
+      //  printf("og_angle = %d, angle = %d, diff = %d \n", og_angle,(int) angle%360, abs((int)angle%360-og_angle));
+        //fflush(stdout);
+       }
+     printf("diff=%d\n", abs((int)angle-og_angle)%360);
+
     fflush(stdout);
     set_tacho_speed_sp( sn_motorA, 0);
     set_tacho_speed_sp( sn_motorB, 0);
@@ -114,6 +130,112 @@ void turn_gyro_left(int degree)
   int max_iter = 50;
   int current_diff = 0;
   int counter = 0;
+  int flag = 0;
+  int flag_first=1;
+  printf("Enter the function turn_gyro_left, degree = %d\n",degree);
+  if ( ev3_search_sensor( LEGO_EV3_GYRO, &sn_gyro, 0 ) &&
+  ev3_search_tacho_plugged_in(MOTOR_A,0, &sn_motorA, 0 ) &&
+  ev3_search_tacho_plugged_in(MOTOR_B,0, &sn_motorB, 0 ))
+  {
+    set_tacho_stop_action_inx( sn_motorA, TACHO_COAST );
+    set_tacho_stop_action_inx( sn_motorB, TACHO_COAST );
+    get_sensor_value0(sn_gyro, &angle );
+    og_angle= (int) angle;
+    set_tacho_speed_sp( sn_motorA, 30);
+    set_tacho_speed_sp(sn_motorB, -30);
+    set_tacho_command_inx( sn_motorA, TACHO_RUN_FOREVER );
+    set_tacho_command_inx( sn_motorB, TACHO_RUN_FOREVER );
+    if(abs(og_angle%180) > 180) {
+      flag = 1;
+      og_angle -= 180;
+    }
+
+    while (abs((int)angle-og_angle)%360 < degree)
+    {
+
+/*
+      if (current_diff == (int)angle%360-og_angle) counter ++;
+      else{
+	counter = 0;
+	current_diff = (int)angle%360-og_angle;
+      }
+      if (counter == max_iter) break;*/
+      get_sensor_value0(sn_gyro, &angle);
+      angle += flag*180;
+/*
+      if ((int)angle%360 == 0 && flag_first){
+        flag_first = 0;
+        og_angle = abs(og_angle) - 360;
+      }
+      */
+      //printf("og_angle = %d, angle = %d, diff = %d \n", og_angle,(int) angle%360, abs((int)angle%360-og_angle));
+      //fflush(stdout);
+     }
+    printf("diff=%d/n", abs((int)angle-og_angle)%360);
+    fflush(stdout);
+    set_tacho_speed_sp( sn_motorA, 0);
+    set_tacho_speed_sp( sn_motorB, 0);
+    set_tacho_command_inx( sn_motorA, TACHO_RUN_FOREVER );
+    set_tacho_command_inx( sn_motorB, TACHO_RUN_FOREVER );
+    set_tacho_stop_action_inx( sn_motorA, TACHO_COAST );
+    set_tacho_stop_action_inx( sn_motorB, TACHO_COAST );
+  }
+}
+
+// function to turn left on one wheel using the gyroscope
+/*
+void turn_gyro_left_1(int degree)
+{
+  uint8_t sn_gyro;
+  uint8_t sn_motorB;
+  int port_gyro = 50;
+  float angle;
+  int og_angle;
+  int max_iter = 50;
+  int current_diff = 0;
+  int counter = 0;
+  printf("Enter the function turn_gyro_right, degree = %d\n",degree);
+  if ( ev3_search_sensor( LEGO_EV3_GYRO, &sn_gyro, 0 ) &&
+  ev3_search_tacho_plugged_in(MOTOR_B,0, &sn_motorB, 0 ))
+  {
+    set_tacho_stop_action_inx( sn_motorB, TACHO_COAST );
+    get_sensor_value0(sn_gyro, &angle );
+    og_angle= (int) angle % 360;
+    set_tacho_speed_sp( sn_motorB, 60);
+    set_tacho_command_inx( sn_motorB, TACHO_RUN_FOREVER );
+
+    while (abs((int)angle-og_angle)%360 < degree)
+    {
+      //printf("og_angle = %d, angle = %d, diff = %d , counter = %d\n", og_angle,(int) angle%360, (int)angle%360-og_angle, counter);
+      fflush(stdout);
+      if (current_diff == (int)angle%360-og_angle) counter ++;
+      else{
+	counter = 0;
+	current_diff = (int)angle%360-og_angle;
+      }
+      if (counter == max_iter) break;
+      get_sensor_value0(sn_gyro, &angle);
+     }
+    //printf("After the while");
+    fflush(stdout);
+    set_tacho_speed_sp( sn_motorB, 0);
+    set_tacho_command_inx( sn_motorB, TACHO_RUN_FOREVER );
+    set_tacho_stop_action_inx( sn_motorB, TACHO_COAST );
+  }
+}
+// function to turn left using the gyroscope
+void turn_gyro_left2(int degree)
+{
+  uint8_t sn_gyro;
+  uint8_t sn_motorA;
+  uint8_t sn_motorB;
+  int port_gyro = 50;
+  float angle;
+  int og_angle;
+  int max_iter = 50;
+  int current_diff = 0;
+  int counter = 0;
+  int time = 100;
   printf("Enter the function turn_gyro_right, degree = %d\n",degree);
   if ( ev3_search_sensor( LEGO_EV3_GYRO, &sn_gyro, 0 ) &&
   ev3_search_tacho_plugged_in(MOTOR_A,0, &sn_motorA, 0 ) &&
@@ -125,13 +247,23 @@ void turn_gyro_left(int degree)
     og_angle= (int) angle % 360;
     set_tacho_speed_sp( sn_motorA, 30);
     set_tacho_speed_sp(sn_motorB, -30);
-    set_tacho_command_inx( sn_motorA, TACHO_RUN_FOREVER );
-    set_tacho_command_inx( sn_motorB, TACHO_RUN_FOREVER );
- 
-    while (abs((int)angle%360-og_angle) < degree)
+    set_tacho_time_sp( sn_motorA, time );
+    set_tacho_time_sp( sn_motorB, time );
+    set_tacho_command_inx( sn_motorA, TACHO_RUN_TIMED );
+    set_tacho_command_inx( sn_motorB, TACHO_RUN_TIMED );
+
+    while (abs((int)angle-og_angle)%360 < degree)
     {
-      printf("og_angle = %d, angle = %d, diff = %d \n", og_angle,(int) angle%360, (int)angle%360-og_angle);
+      //printf("og_angle = %d, angle = %d, diff = %d \n", og_angle,(int) angle%360, (int)angle%360-og_angle);
       fflush(stdout);
+
+      set_tacho_speed_sp( sn_motorA, 30);
+      set_tacho_speed_sp(sn_motorB, -30);
+      set_tacho_time_sp( sn_motorA, time );
+      set_tacho_time_sp( sn_motorB, time );
+      set_tacho_command_inx( sn_motorA, TACHO_RUN_TIMED );
+      set_tacho_command_inx( sn_motorB, TACHO_RUN_TIMED );
+      Sleep(100);
       if (current_diff == (int)angle%360-og_angle) counter ++;
       else{
 	counter = 0;
@@ -150,8 +282,7 @@ void turn_gyro_left(int degree)
     set_tacho_stop_action_inx( sn_motorB, TACHO_COAST );
   }
 }
-
-
+*/
 
 // function to turn left
 void turn_left (int degree)
@@ -190,13 +321,6 @@ void sg_motor (int port, int time, int speed)
     }
 }
 
-// funcion to turn a quarter turn on the left
-void quarter_turn (void)
-{
-  uint8_t sn;
-  sg_motor(MOTOR_A, 540, 300);
-  sg_motor(MOTOR_B, 540, -300);
-}
 
 // function to permform a 3 point throw
 void throw (void)
@@ -227,8 +351,8 @@ void initial_throw(void)
   // throw the first ball
   throw();
   // turn the inner motor, the motor which perform the action of lifting the ball
-  sg_motor(MOTOR_LIFT ,1000,-300);
-  Sleep(500);
+  sg_motor(MOTOR_LIFT ,920,-300);
+  Sleep(1500);
   // throw the second ball
 
   throw();
@@ -249,7 +373,7 @@ void disable_catapult(void)
     }
 }
 
-// function to enable the catapult 
+// function to enable the catapult
 void enable_catapult(void)
 {
     uint8_t sn;
@@ -267,63 +391,51 @@ void enable_catapult(void)
     }
 }
 
-// function to get the ball
-void get_ball(int move_value)
-{
-    printf( "%d this is the color\n", val);
-    fflush( stdout );
-    printf("get_ball\n" );
 
+// function to get the ball
+int get_ball(int move_value)
+{
+    int flag = 0;
+    printf("Enter in the function getball22\n");
     disable_catapult();
 
-    move_forward(move_value/10 + 8);
+    move_forward(move_value);
 
-    enable_catapult();
     Sleep(500);
-    // turn the inner motor, the motor which perform the action of lifting the ball
-    sg_motor(MOTOR_LIFT,1000,-300);
+     flag =catch_ball();
+    Sleep(500);
 
-    Sleep(3000);
-
-    move_backward(move_value/10 + 8);
+    move_backward(move_value);
+    enable_catapult();
+    sg_motor(MOTOR_LIFT,280,-300);
+    return flag;
 }
 
-
-// function to get the ball
-void get_ball22(int move_value, int *flag_ball_caught)
+// function to catch the ball
+int catch_ball(void)
 {
-    int old_val = val;
-      uint8_t sn_color;
-    printf( "%d this is the color\n", val);
-    fflush( stdout );
-    printf("get_ball\n" );
-
-    disable_catapult();
-
-    move_forward(move_value/10 + 8);
-
-    enable_catapult();
-    Sleep(500);
+    printf("Enter in the function catch_ball \n");
+    uint8_t sn_color;
     // turn the inner motor, the motor which perform the action of lifting the ball
-    sg_motor(MOTOR_LIFT,1000,-300);
+    sg_motor(MOTOR_LIFT,400,-300);
+    Sleep(500);
     if ( ev3_search_sensor( LEGO_EV3_COLOR, &sn_color, 0 )) {
-        printf( "COLOR sensor is found, reading COLOR...\n" );
-        if ( !get_sensor_value( 0, sn_color, &val ) || ( val < 0 )) {
+        if ( !get_sensor_value( 0, sn_color, &val ) || ( val < 0 ) ) {
           val = 0;
         }
-        printf( "\r(%d) \n",val );
+        printf( "COLOR sensor is found, the color is (%s) \n", color[val]  );
         fflush( stdout );
       }
-    if (val != old_val) {
-        *flag_ball_caught = 1;
+    if (val != 0) {
+	printf("A ball has been caught\n");
+      return 1;
     }
-    Sleep(3000);
-
-    move_backward(move_value/10 + 8);
+  return 0;
 }
 
-// function to search the ball 
-void search_ball_left(void)
+
+// function to search the ball
+void search_ball_left(int distance_max)
 {
     int i;
     float current_value, previous_value;
@@ -332,13 +444,14 @@ void search_ball_left(void)
     int prev_distance=10000;
     int threshold = 50;
     int flag_detected = 0;
+    int flag_ball_caught =0;
     printf("SONAR found, reading sonar. It will print 36 values \n");
     if (ev3_search_sensor(LEGO_EV3_US, &sn_sonar,0)){
         if ( !get_sensor_value0(sn_sonar, &previous_value )) {
             previous_value = 0;
         }
         // the robot will rotate and search for the ball accordingly to the protocol define below
-        for(i=0; i < 18; i++)
+        for(i=0; i < 20; i++)
         {
           turn_gyro_left(5);
           angle = i*5;
@@ -348,7 +461,7 @@ void search_ball_left(void)
           }
 
           printf( "\r%d : current value %f, previous value %f \n", angle, current_value,previous_value);
-          // the two followin condition express our way to detect the ball 
+          // the two followin condition express our way to detect the ball
           if ((previous_value - current_value > threshold) && (previous_value < 500)) {
               printf("Ball detected\n");
               fflush( stdout );
@@ -361,13 +474,13 @@ void search_ball_left(void)
           }
           if ((current_value - previous_value > threshold) && (previous_value < 500)) {
               printf("Ball missed but then detected\n");
-              turn_gyro_right(10);
+              turn_gyro_right(25);
               Sleep(5000);
               flag_detected = 1;
               printf("%d\n",i);
               fflush( stdout );
 
-              i -= 3;
+              i -= 5;
               break;
           }
           previous_value = current_value;
@@ -376,27 +489,27 @@ void search_ball_left(void)
         // if the ball is detected it perform a turn
         if (flag_detected){
 
-            turn_gyro_left(6);
+            //turn_gyro_left(6);
             turn_gyro_left(180);
-          
-            get_ball(current_value);
-            
+
+            flag_ball_caught =get_ball(min(current_value/10 + 12, distance_max));
+            printf("I will do a turn ...");
             turn_gyro_right(180);
         }
 
         // get back to the initial angle
         if (i>0) turn_gyro_right(5*i);
 
-        turn_gyro_right(6);
+        //turn_gyro_right(6);
         // if the ball is detected then it throw the ball
-        if (flag_detected){
+        if (flag_detected && flag_ball_caught){
             throw();
         }
     }
 }
 
-// function to search the ball 
-void search_ball_right(void)
+// function to search the ball
+void search_ball_right(int distance_max)
 {
     int i;
     float current_value, previous_value;
@@ -405,14 +518,14 @@ void search_ball_right(void)
     int prev_distance=10000;
     int threshold = 50;
     int flag_detected = 0;
-
+    int flag_ball_caught = 0;
     printf("SONAR found, reading sonar. It will print 36 values \n");
     if (ev3_search_sensor(LEGO_EV3_US, &sn_sonar,0)){
         if ( !get_sensor_value0(sn_sonar, &previous_value )) {
             previous_value = 0;
         }
         // the robot will rotate and search for the ball accordingly to the protocol define below
-        for(i=0; i < 18; i++)
+        for(i=0; i < 20; i++)
         {
           turn_gyro_right(5);
           angle = i*5;
@@ -422,7 +535,7 @@ void search_ball_right(void)
           }
 
           printf( "\r%d : current value %f, previous value %f \n", angle, current_value,previous_value);
-          // the two followin condition express our way to detect the ball 
+          // the two followin condition express our way to detect the ball
           if ((previous_value - current_value > threshold) && (previous_value < 500)) {
               printf("Ball detected\n");
               fflush( stdout );
@@ -435,13 +548,13 @@ void search_ball_right(void)
           }
           if ((current_value - previous_value > threshold) && (previous_value < 500)) {
               printf("Ball missed but then detected\n");
-              turn_gyro_left(10);
+              turn_gyro_left(25);
               Sleep(5000);
               flag_detected = 1;
               printf("%d\n",i);
               fflush( stdout );
 
-              i -= 3;
+              i -= 5;
               break;
           }
           previous_value = current_value;
@@ -450,20 +563,20 @@ void search_ball_right(void)
         // if the ball is detected it perform a turn
         if (flag_detected){
 
-            turn_gyro_right(6);
+            //turn_gyro_right(6);
             turn_gyro_right(180);
-          
-            get_ball(current_value);
-            
+
+            flag_ball_caught = get_ball(min(current_value/10 + 12, distance_max));
+
             turn_gyro_left(180);
         }
 
         // get back to the initial angle
         if (i>0) turn_gyro_left(5*i);
 
-        turn_gyro_left(6);
+        //turn_gyro_left(6);
         // if the ball is detected then it throw the ball
-        if (flag_detected){
+        if (flag_detected && flag_ball_caught){
             throw();
         }
     }

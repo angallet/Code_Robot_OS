@@ -9,9 +9,8 @@
 #include <pthread.h>
 #include "bluetooth.h"
 #define Sleep( msec ) usleep(( msec ) * 1000 )
-const char const *color[] = { "?", "BLACK", "BLUE", "GREEN", "YELLOW", "RED", "WHITE", "BROWN" };
+const char const *color[] = { "?", "BLACK", "BLUE", "GREEN", "YELLOW", "RED", "WHITE", "BROWN"};
 #define COLOR_COUNT  (( int )( sizeof( color ) / sizeof( color[ 0 ])))
-
 static bool _check_pressed( uint8_t sn );
 int val;
 int activated = 0;
@@ -28,7 +27,7 @@ int main( void )
   pthread_t thread_id;
     printf("create Thread\n");
     pthread_create(&thread_id, NULL, mybluetooth, NULL);
-    pthread_join(thread_id, NULL);
+    //pthread_join(thread_id, NULL);
     printf(" Thread done \n");
 
 
@@ -39,27 +38,61 @@ int main( void )
     //Run all sensors
     ev3_sensor_init();
 
-    for ( ; ; ){
+
       // search the color
-      if ( ev3_search_sensor( LEGO_EV3_COLOR, &sn_color, 0 )) {
-        printf( "COLOR sensor is found, reading COLOR...\n" );
+    /*  if ( ev3_search_sensor( LEGO_EV3_COLOR, &sn_color, 0 )) {
+	      printf( "COLOR sensor is found, reading COLOR...\n" );
         if ( !get_sensor_value( 0, sn_color, &val ) || ( val < 0 ) || ( val >= COLOR_COUNT )) {
           val = 0;
         }
         printf( "\r(%s) \n", color[ val ]);
         fflush( stdout );
       }
-      int flag = 0;
-      get_ball22(10,&flag);
-      printf("%d\n",flag);
-      fflush(stdout);
+      */
       // this is the core part of the main which defines routines
+      //search_ball_left(50);
+      //activated = 1;
+      while (activated != 1) {
+        int i = 0;
+        i ++;
+      }
       if (activated){
         // throw the two ball initial ball already installed in the robot
+        //search_ball_right(55);
+      //  turn_gyro_right(180);
         initial_throw();
-        search_ball_right();
-      }
-    }
+
+        int distance_max_first_search = 50;
+        int distance_max_second_search = 50;
+        int distance_move_second_search = 20;
+        while (activated) {
+          search_ball_right(distance_max_first_search);
+          search_ball_left(distance_max_first_search);
+          search_ball_right(distance_max_first_search);
+          search_ball_left(distance_max_first_search);
+        }
+
+
+/*
+        turn_gyro_left(45);
+        move_forward(distance_move_second_search);
+        turn_gyro_right(45);
+        search_ball_left(distance_max_second_search);
+        turn_gyro_left(45);
+        move_backward(distance_move_second_search);
+        turn_gyro_right(45);
+
+        turn_gyro_right(45);
+        move_forward(distance_move_second_search);
+        turn_gyro_left(45);
+        search_ball_right(distance_max_second_search);
+        turn_gyro_right(45);
+        move_backward(distance_move_second_search);
+        turn_gyro_left(45);*/
+
+          }
+
+          pthread_join(thread_id, NULL);
 
     ev3_uninit();
     printf( "*** ( EV3 ) Bye! ***\n" );
