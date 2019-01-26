@@ -1,32 +1,44 @@
 # Projet 2018 LeBot James
 
 Source code of Lebot James
+
 Team members :
 Arthur Dion, Antoine Gallet and Paul Monniot
 
 
 ## How to 
-if you want to compile directly on your robot just :
+First clone our git :
+```git clone https://gitlab.eurecom.fr/monniot/OS_Rover_APA.git ```
+
+if you want to compile directly on your robot just execute there :
 
 ``` bash
 make
 ```
 
-If your are on your computer and want to use cross compilation execute the folloving step
-``` bash
-make docker
-```
-Inside the docker run :
-``` bash
-make install-blue
-make install-shared
-make
-exit
-```
-and nnow send your program with 
-``` bash
-make send 
-```
+If your are on your computer and want to use cross compilation execute the folloving step : 
+
+1. Install docker on your system https://docs.docker.com/install/
+2. Install the docker to do the cross compilation :
+	```bash
+	docker pull ev3dev/debian-jessie-cross:latest
+	docker tag ev3dev/debian-jessie-cross ev3cc
+	```
+3. Use it (note that the project have to be running on `~/` to run correctly)
+	``` bash
+	make docker
+	```
+4. Configure the docker and compile :
+	``` bash
+	make install-blue
+	make install-shared
+	make
+	exit
+	```
+5. Send your program on the robot with : 
+	``` bash
+	make send 
+	```
 By default the IP address defined in the Makefile is 192.168.137.3 you have to change it accordingly on the Makefile in order to be able to run the previous command
 
 
